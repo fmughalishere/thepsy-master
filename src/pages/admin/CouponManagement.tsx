@@ -43,6 +43,7 @@ const EMPTY_COUPON: Omit<Coupon, 'id'> = {
     max_redemptions: null,
     max_per_customer: null,
     unlimited_usage: true,
+    restricted_to_email: '',
     applicable_plans: 'all',
     min_order_value: 0,
     source: '',
@@ -74,7 +75,8 @@ const CouponManagement = () => {
     const filteredCoupons = coupons.filter(c => {
         const matchSearch = c.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
             (c.name || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-            (c.source || '').toLowerCase().includes(searchTerm.toLowerCase());
+            (c.source || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+            (c.restricted_to_email || '').toLowerCase().includes(searchTerm.toLowerCase());
         const matchStatus = statusFilter === 'all' || c.status === statusFilter;
         return matchSearch && matchStatus;
     });
@@ -104,6 +106,7 @@ const CouponManagement = () => {
                 code: formData.code.trim().toUpperCase(),
                 max_redemptions: formData.unlimited_usage ? null : (formData.max_redemptions || null),
                 applicable_plans: formData.applicable_plans,
+                restricted_to_email: formData.restricted_to_email?.trim().toLowerCase() || null,
             };
 
             if (editingCoupon?.id) {
@@ -266,6 +269,11 @@ const CouponManagement = () => {
                                                     </button>
                                                 </div>
                                                 {coupon.name && <p className="text-xs text-gray-500 mt-0.5">{coupon.name}</p>}
+                                                {coupon.restricted_to_email && (
+                                                    <Badge variant="outline" className="text-xs mt-1 text-purple-600 border-purple-200">
+                                                        Private · {coupon.restricted_to_email}
+                                                    </Badge>
+                                                )}
                                             </TableCell>
                                             <TableCell>
                                                 <span className="font-semibold text-green-600">
@@ -473,6 +481,23 @@ const CouponManagement = () => {
                                     <SelectItem value="existing">Existing Customers Only</SelectItem>
                                 </SelectContent>
                             </Select>
+                        </div>
+
+                        {/* Single-customer coupon */}
+                        <div className="p-3 bg-gray-50 rounded-lg space-y-2">
+                            <div>
+                                <p className="font-medium text-sm">Assign to One Specific Customer (optional)</p>
+                                <p className="text-xs text-gray-500">
+                                    If filled, only this customer's account can redeem the coupon — no one else will be able to use the code, even if they somehow get it.
+                                </p>
+                            </div>
+                            <Input
+                                type="email"
+                                placeholder="customer@example.com"
+                                value={formData.restricted_to_email || ''}
+                                onChange={e => setFormData(p => ({ ...p, restricted_to_email: e.target.value }))}
+                                className="mt-1"
+                            />
                         </div>
 
                         <div className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">

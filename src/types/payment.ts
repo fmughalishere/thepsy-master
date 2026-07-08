@@ -129,6 +129,10 @@ export interface Coupon {
     max_redemptions?: number | null;
     max_per_customer?: number | null;
     unlimited_usage: boolean;
+    // Assign this coupon to one specific customer only (their account email).
+    // When set, only that customer can redeem it — everyone else gets an
+    // "invalid coupon" style error, regardless of customer_restriction above.
+    restricted_to_email?: string | null;
     // Package restrictions
     applicable_plans: string[] | 'all';
     min_order_value?: number;

@@ -272,6 +272,7 @@ export const usePayment = () => {
         try {
             const code = state.couponCode.trim().toUpperCase();
             const userId = auth.currentUser?.uid;
+            const userEmail = auth.currentUser?.email?.trim().toLowerCase();
 
             // Fetch coupon from Firestore
             const couponsRef = collection(db, 'coupons');
@@ -289,6 +290,21 @@ export const usePayment = () => {
 
             const couponDoc = snap.docs[0];
             const coupon = { id: couponDoc.id, ...couponDoc.data() } as Coupon;
+
+            // Single-customer coupon check — only the assigned email may redeem it.
+            // Deliberately uses the same "invalid" message as a non-existent code so
+            // other users can't tell the coupon exists and is just locked to someone else.
+            if (coupon.restricted_to_email) {
+                const assignedEmail = coupon.restricted_to_email.trim().toLowerCase();
+                if (!userEmail || userEmail !== assignedEmail) {
+                    setState(prev => ({
+                        ...prev,
+                        isCouponLoading: false,
+                        couponResult: { valid: false, error: 'Coupon code is invalid.' }
+                    }));
+                    return;
+                }
+            }
 
             const now = new Date();
             const startDate = new Date(coupon.start_date);
