@@ -1,0 +1,128 @@
+// Default/fallback pricing metadata, mirrored from the Firebase Remote Config
+// "payments" template. These values are only used as the STARTING POINT shown
+// in the Admin Pricing panel the very first time (before any override has been
+// saved to Firestore). Once an admin saves a price, the live value always comes
+// from Firestore (see `pricing/plans` and `pricing/addons` documents).
+//
+// NOTE: Editing a price here does NOT change what Stripe actually charges.
+// Stripe Price IDs (in Remote Config) control the real charge amount and are
+// managed separately — see PricingManagement.tsx for the on-screen warning.
+
+export type PricingPlanCategory =
+    | 'basic'
+    | 'plus'
+    | 'one_time'
+    | 'therapy_couples'
+    | 'coaching';
+
+export interface PlanPricingDefault {
+    id: string;
+    name: string;
+    category: PricingPlanCategory;
+    currency: string;
+    price: number;
+    actual_charge?: number;
+    display_price: string;
+    display_billing?: string;
+    has_weekly_frequency?: boolean; // Plus plan uses frequency_prices.weekly
+    unit_label: string; // shown next to the price input, e.g. "/week"
+}
+
+export interface AddonPricingDefault {
+    id: string;
+    name: string;
+    description?: string;
+    currency: string;
+    price: number;
+    display_price: string;
+    unit_label: string;
+}
+
+export const PLAN_CATEGORY_LABELS: Record<PricingPlanCategory, string> = {
+    basic: 'Basic Plan',
+    plus: 'Plus Plan (Individual Therapy)',
+    one_time: 'One-Time Session',
+    therapy_couples: 'Couples Therapy',
+    coaching: 'Coaching',
+};
+
+export const DEFAULT_PLAN_PRICING: PlanPricingDefault[] = [
+    {
+        id: 'basic_monthly', name: 'Basic Plan', category: 'basic', currency: 'EUR',
+        price: 9.99, actual_charge: 39.96,
+        display_price: '€9.99/week', display_billing: 'Billed monthly at €39.96',
+        unit_label: '/week',
+    },
+    {
+        id: 'plus_weekly', name: 'Plus Plan — 1x per week', category: 'plus', currency: 'EUR',
+        price: 64.99, actual_charge: 259.96,
+        display_price: '€64.99/week', display_billing: 'Billed monthly at €259.96 · 1 session per week',
+        unit_label: '/week',
+    },
+    {
+        id: 'plus_bimonthly', name: 'Plus Plan — 2x per month', category: 'plus', currency: 'EUR',
+        price: 34.99,
+        display_price: '€34.99/week', display_billing: '2 sessions per month',
+        unit_label: '/week',
+    },
+    {
+        id: 'plus_monthly', name: 'Plus Plan — 1x per month', category: 'plus', currency: 'EUR',
+        price: 19.99,
+        display_price: '€19.99/week', display_billing: '1 session per month',
+        unit_label: '/week',
+    },
+    {
+        id: 'one_time_session', name: 'One-Time Session', category: 'one_time', currency: 'EUR',
+        price: 79.99, actual_charge: 79.99,
+        display_price: '€79.99/session', display_billing: 'One-time payment',
+        unit_label: '/session',
+    },
+    {
+        id: 'couples_support_monthly', name: 'Couples Therapy — 1x per week', category: 'therapy_couples', currency: 'EUR',
+        price: 84.99, actual_charge: 339.96,
+        display_price: '€84.99/week', display_billing: 'Billed monthly at €339.96',
+        unit_label: '/week',
+    },
+    {
+        id: 'therapy_couples_bimonthly', name: 'Couples Therapy — 2x per month', category: 'therapy_couples', currency: 'EUR',
+        price: 44.99,
+        display_price: '€44.99/week', display_billing: '2 sessions per month',
+        unit_label: '/week',
+    },
+    {
+        id: 'therapy_couples_monthly', name: 'Couples Therapy — 1x per month', category: 'therapy_couples', currency: 'EUR',
+        price: 29.99,
+        display_price: '€29.99/week', display_billing: '1 session per month',
+        unit_label: '/week',
+    },
+    {
+        id: 'coaching_weekly', name: 'Coaching — 1x per week', category: 'coaching', currency: 'EUR',
+        price: 49.99,
+        display_price: '€49.99/week', display_billing: '30-minute sessions',
+        unit_label: '/week',
+    },
+    {
+        id: 'coaching_bimonthly', name: 'Coaching — 2x per month', category: 'coaching', currency: 'EUR',
+        price: 24.99,
+        display_price: '€24.99/week', display_billing: '30-minute sessions · 2x per month',
+        unit_label: '/week',
+    },
+    {
+        id: 'coaching_monthly', name: 'Coaching — 1x per month', category: 'coaching', currency: 'EUR',
+        price: 14.99,
+        display_price: '€14.99/week', display_billing: '30-minute sessions · 1x per month',
+        unit_label: '/week',
+    },
+];
+
+export const DEFAULT_ADDON_PRICING: AddonPricingDefault[] = [
+    { id: 'hypnosis', name: 'Hypnosis Session', description: 'Guided hypnotherapy session', currency: 'EUR', price: 0, display_price: 'TBD', unit_label: '/session' },
+    { id: 'emdr', name: 'EMDR Session', description: 'Eye Movement Desensitization and Reprocessing', currency: 'EUR', price: 0, display_price: 'TBD', unit_label: '/session' },
+    { id: 'rooms', name: 'Rooms (Community Spaces)', description: 'Access to community support spaces', currency: 'EUR', price: 4.99, display_price: '€4.99', unit_label: '' },
+    { id: 'group_sessions', name: 'Group Sessions', description: 'Join group therapy sessions', currency: 'EUR', price: 4.99, display_price: '€4.99', unit_label: '/session' },
+    { id: 'diagnostics_autism', name: 'Diagnostics — Autism', description: 'Professional autism diagnostic assessment', currency: 'EUR', price: 0, display_price: 'TBD', unit_label: '' },
+    { id: 'diagnostics_adhd', name: 'Diagnostics — ADHD', description: 'Professional ADHD diagnostic assessment', currency: 'EUR', price: 0, display_price: 'TBD', unit_label: '' },
+    { id: 'diagnostics_depression', name: 'Diagnostics — Depression', description: 'Professional depression diagnostic assessment', currency: 'EUR', price: 0, display_price: 'TBD', unit_label: '' },
+    { id: 'reports', name: 'Reports (Findings)', description: 'Detailed therapy progress reports', currency: 'EUR', price: 0, display_price: 'TBD', unit_label: '' },
+    { id: 'additional_sessions', name: 'Additional Sessions', description: 'Extra therapy sessions (Basic plan)', currency: 'EUR', price: 0, display_price: 'TBD', unit_label: '/session' },
+];

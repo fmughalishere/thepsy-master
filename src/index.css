@@ -1,0 +1,301 @@
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@300;400;500;600;700;800&family=Kalnia:wght@400;500;600;700&family=Shippori+Mincho:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* ThePsy Brand Colors */
+    /* PsyCMp Brand Colors */
+    --background: 48 42% 96%;
+    /* #FBF9F1 */
+    --foreground: 200 20% 20%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 200 20% 20%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 200 20% 20%;
+
+    /* Primary: #92C7CF */
+    --primary: 188 38% 69%;
+    --primary-foreground: 0 0% 0%;
+    --primary-light: 188 38% 85%;
+    --primary-dark: 188 38% 55%;
+
+    /* Secondary: #508C96 */
+    --secondary: 188 30% 45%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 48 20% 90%;
+    --muted-foreground: 200 10% 50%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 188 20% 88%;
+    --input: 188 20% 88%;
+    --ring: 188 38% 69%;
+
+    --radius: 1rem;
+
+    /* Legacy tokens compatibility (mapped to new brand) */
+    --cream: 48 42% 96%;
+    --cream-dark: 48 25% 90%;
+    --teal: 188 38% 69%;
+    --teal-light: 188 38% 85%;
+    --teal-dark: 188 30% 45%;
+    --coral: 15 70% 65%;
+    /* Keeping accent for now */
+    --coral-light: 15 70% 92%;
+    --navy: 200 40% 20%;
+
+    /* Shadows */
+    --shadow-soft: 0 4px 20px -4px hsl(188 38% 69% / 0.15);
+    --shadow-card: 0 8px 30px -10px hsl(200 20% 20% / 0.1);
+    --shadow-elevated: 0 20px 60px -15px hsl(200 20% 20% / 0.2);
+
+    /* Sidebar */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 200 20% 30%;
+    --sidebar-primary: 188 38% 69%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 188 38% 95%;
+    --sidebar-accent-foreground: 188 38% 45%;
+    --sidebar-border: 188 20% 90%;
+    --sidebar-ring: 188 38% 69%;
+  }
+
+  .dark {
+    --background: 200 30% 8%;
+    --foreground: 48 20% 95%;
+
+    --card: 200 25% 12%;
+    --card-foreground: 48 20% 95%;
+
+    --popover: 200 25% 12%;
+    --popover-foreground: 48 20% 95%;
+
+    --primary: 188 38% 69%;
+    --primary-foreground: 0 0% 0%;
+    --primary-light: 188 38% 30%;
+    --primary-dark: 188 38% 80%;
+
+    --secondary: 188 30% 45%;
+    --secondary-foreground: 48 20% 90%;
+
+    --muted: 200 15% 20%;
+    --muted-foreground: 48 10% 60%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 200 20% 20%;
+    --input: 200 20% 20%;
+    --ring: 188 38% 69%;
+
+    --cream: 200 20% 10%;
+    --cream-dark: 200 20% 15%;
+    --teal: 188 38% 69%;
+    --teal-light: 188 30% 20%;
+    --teal-dark: 188 38% 80%;
+    --coral: 15 65% 55%;
+    --coral-light: 15 40% 20%;
+    --navy: 48 20% 90%;
+
+    --sidebar-background: 200 25% 10%;
+    --sidebar-foreground: 48 20% 90%;
+    --sidebar-primary: 188 38% 69%;
+    --sidebar-primary-foreground: 0 0% 0%;
+    --sidebar-accent: 188 30% 18%;
+    --sidebar-accent-foreground: 188 38% 80%;
+    --sidebar-border: 200 20% 18%;
+    --sidebar-ring: 188 38% 69%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-serif;
+  }
+}
+
+@layer utilities {
+  .font-serif {
+    font-family: 'Cormorant Garamond', Georgia, serif;
+  }
+
+  .font-sans {
+    font-family: 'Inter', system-ui, sans-serif;
+  }
+
+  /* ThePsy specific utilities */
+  .card-wellness {
+    @apply bg-card rounded-3xl shadow-card border border-border/50;
+  }
+
+  .btn-primary {
+    @apply bg-primary text-primary-foreground rounded-full px-8 py-3 font-medium hover:bg-primary/90 transition-all duration-300 shadow-soft;
+  }
+
+  .btn-outline {
+    @apply bg-transparent text-primary border-2 border-primary rounded-full px-8 py-3 font-medium hover:bg-primary hover:text-primary-foreground transition-all duration-300;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-teal to-primary bg-clip-text text-transparent;
+  }
+
+  .bg-cream {
+    @apply bg-[hsl(var(--cream))];
+  }
+
+  .bg-cream-dark {
+    @apply bg-[hsl(var(--cream-dark))];
+  }
+
+  .bg-teal {
+    @apply bg-[hsl(var(--teal))];
+  }
+
+  .bg-teal-light {
+    @apply bg-[hsl(var(--teal-light))];
+  }
+
+  .text-teal {
+    @apply text-[hsl(var(--teal))];
+  }
+
+  .text-teal-dark {
+    @apply text-[hsl(var(--teal-dark))];
+  }
+
+  .bg-coral {
+    @apply bg-[hsl(var(--coral))];
+  }
+
+  .bg-coral-light {
+    @apply bg-[hsl(var(--coral-light))];
+  }
+
+  .text-coral {
+    @apply text-[hsl(var(--coral))];
+  }
+
+  .text-navy {
+    @apply text-[hsl(var(--navy))];
+  }
+
+  /* Mobile phone frame */
+  .phone-frame {
+    @apply max-w-md mx-auto min-h-screen bg-background;
+  }
+
+  /* Smooth page transitions */
+  .page-transition {
+    @apply transition-all duration-300 ease-out;
+  }
+
+  /* Pill buttons for options */
+  .pill-option {
+    @apply w-full py-3 px-6 rounded-full text-center font-medium transition-all duration-200 border-2 border-transparent;
+  }
+
+  .pill-option-primary {
+    @apply pill-option bg-primary text-primary-foreground hover:bg-primary/90;
+  }
+
+  .pill-option-outline {
+    @apply pill-option bg-transparent border-primary text-primary hover:bg-primary/10;
+  }
+
+  /* Card hover effects */
+  .card-interactive {
+    @apply transition-all duration-300 hover:shadow-elevated hover:-translate-y-1;
+  }
+
+  /* Gradient backgrounds */
+  .gradient-header {
+    @apply bg-gradient-to-b from-teal-light to-background;
+  }
+
+  .gradient-teal {
+    @apply bg-gradient-to-br from-[hsl(var(--teal))] to-[hsl(var(--teal-dark))];
+  }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-muted rounded-full;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-primary/30 rounded-full hover:bg-primary/50;
+}
+
+/* Animation keyframes */
+@keyframes float {
+
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-gentle {
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+}
+
+.animate-pulse-gentle {
+  animation: pulse-gentle 2s ease-in-out infinite;
+}

@@ -1,0 +1,932 @@
+{
+  "therapy_session_plans_en": [
+    {
+      "id": "basic_monthly",
+      "name": "Basic Plan",
+      "plan_category": "basic",
+      "price": 9.99,
+      "currency": "EUR",
+      "billing_period": "weekly",
+      "billing_cycle": "monthly",
+      "actual_charge": 39.96,
+      "stripe_price_id": "price_1Si7hcCIhcbX3ibwhH9nm3Fj",
+      "stripe_product_id": "prod_TfScxVz3JErPaM",
+      "plan_type": "subscription",
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "Chat",
+        "Journaling",
+        "Mood Tracker"
+      ],
+      "quotas": {
+        "offline_messages_per_day": 5,
+        "message_word_limit": 2500,
+        "live_sessions_per_month": 0,
+        "journal_unlimited": true,
+        "mood_tracker_unlimited": true,
+        "affirmations_unlimited": true
+      },
+      "display_price": "€9.99/week",
+      "display_billing": "Billed monthly at €39.96",
+      "popular": false
+    },
+    {
+      "id": "plus_weekly",
+      "name": "Plus Plan — 1x per week",
+      "plan_category": "plus",
+      "price": 64.99,
+      "currency": "EUR",
+      "billing_period": "weekly",
+      "billing_cycle": "monthly",
+      "actual_charge": 259.96,
+      "stripe_price_id": "price_1St3XVCIhcbX3ibwJjh8DofE",
+      "stripe_product_id": "prod_Tql38MgnGKoVHk",
+      "plan_type": "subscription",
+      "session_duration": 45,
+      "requires_frequency_selection": false,
+      "available_frequencies": [
+        "weekly"
+      ],
+      "frequency_prices": {
+        "weekly": 64.99
+      },
+      "frequency_stripe_price_ids": {
+        "weekly": "price_1St3XVCIhcbX3ibwJjh8DofE"
+      },
+      "features": [
+        "Chat",
+        "Journaling",
+        "Mood Tracker",
+        "Up to 4 sessions"
+      ],
+      "quotas": {
+        "offline_messages_per_day": 0,
+        "message_word_limit": 0,
+        "live_sessions_per_month": 4,
+        "journal_unlimited": true,
+        "mood_tracker_unlimited": true,
+        "affirmations_unlimited": true
+      },
+      "display_price": "€64.99/week",
+      "display_billing": "Billed monthly at €259.96",
+      "popular": true
+    },
+    {
+      "id": "plus_bimonthly",
+      "name": "Plus Plan — 2x per month",
+      "plan_category": "plus",
+      "price": 34.99,
+      "currency": "EUR",
+      "billing_period": "weekly",
+      "billing_cycle": "monthly",
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
+      "setup_note": "NOT LIVE YET — needs a real Stripe Price created (recurring, €34.99).",
+      "plan_type": "subscription",
+      "session_duration": 45,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "2 sessions per month",
+        "45-minute sessions",
+        "Individual therapy"
+      ],
+      "quotas": {
+        "live_sessions_per_month": 2,
+        "session_duration_minutes": 45
+      },
+      "display_price": "€34.99/week",
+      "display_billing": "2 sessions per month",
+      "popular": false
+    },
+    {
+      "id": "plus_monthly",
+      "name": "Plus Plan — 1x per month",
+      "plan_category": "plus",
+      "price": 19.99,
+      "currency": "EUR",
+      "billing_period": "weekly",
+      "billing_cycle": "monthly",
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
+      "setup_note": "NOT LIVE YET — needs a real Stripe Price created (recurring, €19.99).",
+      "plan_type": "subscription",
+      "session_duration": 45,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "1 session per month",
+        "45-minute sessions",
+        "Individual therapy"
+      ],
+      "quotas": {
+        "live_sessions_per_month": 1,
+        "session_duration_minutes": 45
+      },
+      "display_price": "€19.99/week",
+      "display_billing": "1 session per month",
+      "popular": false
+    },
+    {
+      "id": "one_time_session",
+      "name": "One-Time Session",
+      "plan_category": "one_time",
+      "price": 79.99,
+      "currency": "EUR",
+      "billing_period": "one_time",
+      "actual_charge": 79.99,
+      "stripe_price_id": "price_1St3aSCIhcbX3ibwNXoBqyMO",
+      "stripe_product_id": "prod_Tql6ICKUDCuDCr",
+      "plan_type": "one_time",
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "€79.99 per Session",
+        "45-Minute Session via audio, Video or Chat",
+        "Licensed therapist"
+      ],
+      "quotas": {
+        "offline_messages_per_day": 0,
+        "message_word_limit": 0,
+        "live_sessions_per_month": 1,
+        "journal_unlimited": false,
+        "mood_tracker_unlimited": false,
+        "affirmations_unlimited": false
+      },
+      "display_price": "€79.99/session",
+      "display_billing": "One-time payment",
+      "popular": false
+    },
+    {
+      "id": "couples_support_monthly",
+      "name": "Couples Therapy — 1x per week",
+      "plan_category": "therapy_couples",
+      "price": 84.99,
+      "currency": "EUR",
+      "billing_period": "weekly",
+      "billing_cycle": "monthly",
+      "actual_charge": 339.96,
+      "stripe_price_id": "price_1St3ZtCIhcbX3ibwQHlxN9TI",
+      "stripe_product_id": "prod_Tql69WrC9MXspD",
+      "plan_type": "subscription",
+      "session_duration": 45,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "1 session per week",
+        "45-minute sessions",
+        "Mood Tracker, Journaling and Affirmation",
+        "Can be terminated on monthly basis"
+      ],
+      "quotas": {
+        "offline_messages_per_day": 0,
+        "message_word_limit": 0,
+        "live_sessions_per_month": 4,
+        "journal_unlimited": true,
+        "mood_tracker_unlimited": true,
+        "affirmations_unlimited": true
+      },
+      "display_price": "€84.99/week",
+      "display_billing": "Billed monthly at €339.96",
+      "popular": false
+    },
+    {
+      "id": "therapy_couples_bimonthly",
+      "name": "Couples Therapy — 2x per month",
+      "plan_category": "therapy_couples",
+      "price": 44.99,
+      "currency": "EUR",
+      "billing_period": "weekly",
+      "billing_cycle": "monthly",
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
+      "setup_note": "NOT LIVE YET — needs a real Stripe Price created (recurring, €44.99) before this plan will work. The placeholder value will safely block checkout with a clear error until replaced.",
+      "plan_type": "subscription",
+      "session_duration": 45,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "2 sessions per month",
+        "45-minute sessions",
+        "Couples therapy"
+      ],
+      "quotas": {
+        "live_sessions_per_month": 2,
+        "session_duration_minutes": 45
+      },
+      "display_price": "€44.99/week",
+      "display_billing": "2 sessions per month",
+      "popular": false
+    },
+    {
+      "id": "therapy_couples_monthly",
+      "name": "Couples Therapy — 1x per month",
+      "plan_category": "therapy_couples",
+      "price": 29.99,
+      "currency": "EUR",
+      "billing_period": "weekly",
+      "billing_cycle": "monthly",
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
+      "setup_note": "NOT LIVE YET — needs a real Stripe Price created (recurring, €29.99) before this plan will work.",
+      "plan_type": "subscription",
+      "session_duration": 45,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "1 session per month",
+        "45-minute sessions",
+        "Couples therapy"
+      ],
+      "quotas": {
+        "live_sessions_per_month": 1,
+        "session_duration_minutes": 45
+      },
+      "display_price": "€29.99/week",
+      "display_billing": "1 session per month",
+      "popular": false
+    },
+    {
+      "id": "coaching_weekly",
+      "name": "Coaching — 1x per week",
+      "plan_category": "coaching",
+      "price": 49.99,
+      "currency": "EUR",
+      "billing_period": "weekly",
+      "billing_cycle": "monthly",
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
+      "setup_note": "NOT LIVE YET — needs a real Stripe Price created (recurring, €49.99).",
+      "plan_type": "subscription",
+      "session_duration": 30,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "30-minute coaching sessions",
+        "1 session per week",
+        "Offline Chat",
+        "Goal tracking"
+      ],
+      "quotas": {
+        "live_sessions_per_month": 4,
+        "session_duration_minutes": 30,
+        "message_word_limit": 500
+      },
+      "display_price": "€49.99/week",
+      "display_billing": "30-minute sessions",
+      "popular": false
+    },
+    {
+      "id": "coaching_bimonthly",
+      "name": "Coaching — 2x per month",
+      "plan_category": "coaching",
+      "price": 24.99,
+      "currency": "EUR",
+      "billing_period": "weekly",
+      "billing_cycle": "monthly",
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
+      "setup_note": "NOT LIVE YET — needs a real Stripe Price created (recurring, €24.99).",
+      "plan_type": "subscription",
+      "session_duration": 30,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "30-minute coaching sessions",
+        "2 sessions per month",
+        "Offline Chat",
+        "Goal tracking"
+      ],
+      "quotas": {
+        "live_sessions_per_month": 2,
+        "session_duration_minutes": 30,
+        "message_word_limit": 500
+      },
+      "display_price": "€24.99/week",
+      "display_billing": "30-minute sessions · 2x per month",
+      "popular": false
+    },
+    {
+      "id": "coaching_monthly",
+      "name": "Coaching — 1x per month",
+      "plan_category": "coaching",
+      "price": 14.99,
+      "currency": "EUR",
+      "billing_period": "weekly",
+      "billing_cycle": "monthly",
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
+      "setup_note": "NOT LIVE YET — needs a real Stripe Price created (recurring, €14.99).",
+      "plan_type": "subscription",
+      "session_duration": 30,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "30-minute coaching sessions",
+        "1 session per month",
+        "Offline Chat",
+        "Goal tracking"
+      ],
+      "quotas": {
+        "live_sessions_per_month": 1,
+        "session_duration_minutes": 30,
+        "message_word_limit": 500
+      },
+      "display_price": "€14.99/week",
+      "display_billing": "30-minute sessions · 1x per month",
+      "popular": false
+    }
+  ],
+  "addons": [
+    {
+      "id": "hypnosis",
+      "name": "Hypnosis Session",
+      "description": "Guided hypnotherapy session",
+      "price": 0,
+      "currency": "EUR",
+      "display_price": "TBD",
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "setup_note": "Price not yet provided by client.",
+      "available_for_plans": "all"
+    },
+    {
+      "id": "additional_sessions",
+      "name": "Additional Sessions",
+      "description": "Extra therapy sessions",
+      "price": 0,
+      "currency": "EUR",
+      "display_price": "TBD",
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "setup_note": "Price not yet provided by client.",
+      "available_for_plans": [
+        "basic_monthly"
+      ]
+    },
+    {
+      "id": "emdr",
+      "name": "EMDR Session",
+      "description": "Eye Movement Desensitization and Reprocessing",
+      "price": 0,
+      "currency": "EUR",
+      "display_price": "TBD",
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "setup_note": "Price not yet provided by client.",
+      "available_for_plans": "all"
+    },
+    {
+      "id": "rooms",
+      "name": "Rooms (Community Spaces)",
+      "description": "Access to community support spaces",
+      "price": 4.99,
+      "currency": "EUR",
+      "display_price": "€4.99",
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "setup_note": "Price confirmed (€4.99) — still needs a real Stripe Price created.",
+      "available_for_plans": "all"
+    },
+    {
+      "id": "group_sessions",
+      "name": "Group Sessions",
+      "description": "Join group therapy sessions",
+      "price": 4.99,
+      "currency": "EUR",
+      "display_price": "€4.99",
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "setup_note": "Price confirmed (€4.99) — still needs a real Stripe Price created.",
+      "available_for_plans": "all"
+    },
+    {
+      "id": "diagnostics_autism",
+      "name": "Diagnostics — Autism",
+      "description": "Professional autism diagnostic assessment",
+      "price": 0,
+      "currency": "EUR",
+      "display_price": "TBD",
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "setup_note": "Price not yet provided by client.",
+      "available_for_plans": "all"
+    },
+    {
+      "id": "diagnostics_adhd",
+      "name": "Diagnostics — ADHD",
+      "description": "Professional adhd diagnostic assessment",
+      "price": 0,
+      "currency": "EUR",
+      "display_price": "TBD",
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "setup_note": "Price not yet provided by client.",
+      "available_for_plans": "all"
+    },
+    {
+      "id": "diagnostics_depression",
+      "name": "Diagnostics — Depression",
+      "description": "Professional depression diagnostic assessment",
+      "price": 0,
+      "currency": "EUR",
+      "display_price": "TBD",
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "setup_note": "Price not yet provided by client.",
+      "available_for_plans": "all"
+    },
+    {
+      "id": "reports",
+      "name": "Reports (Findings)",
+      "description": "Detailed therapy progress reports",
+      "price": 0,
+      "currency": "EUR",
+      "display_price": "TBD",
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "setup_note": "Price not yet provided by client.",
+      "available_for_plans": "all"
+    }
+  ],
+  "therapy_session_plans_de": [
+    {
+      "id": "basic_monthly",
+      "name": "Basisplan",
+      "price": 9.99,
+      "currency": "EUR",
+      "billing_period": "weekly",
+      "billing_cycle": "monthly",
+      "actual_charge": 39.96,
+      "stripe_price_id": "price_1Si7hcCIhcbX3ibwhH9nm3Fj",
+      "stripe_product_id": "prod_TfScxVz3JErPaM",
+      "plan_type": "subscription",
+      "features": [
+        "9,99 € pro Woche, monatlich abgerechnet (39,96 €)",
+        "5 tägliche Nachrichten mit einem Limit von 2500 Wörtern",
+        "Antwort vom lizenzierten Therapeuten innerhalb von 24 Stunden",
+        "Chat, Stimmungstracker, Journaling und Affirmationen"
+      ],
+      "quotas": {
+        "offline_messages_per_day": 5,
+        "message_word_limit": 2500,
+        "live_sessions_per_month": 0,
+        "journal_unlimited": true,
+        "mood_tracker_unlimited": true,
+        "affirmations_unlimited": true
+      },
+      "display_price": "9,99 €/Woche",
+      "display_billing": "Monatliche Abrechnung von 39,96 €",
+      "popular": false
+    },
+    {
+      "id": "full_support_monthly",
+      "name": "Voll-Support-Plan",
+      "price": 64.99,
+      "currency": "EUR",
+      "billing_period": "weekly",
+      "billing_cycle": "monthly",
+      "actual_charge": 259.96,
+      "stripe_price_id": "price_1St3XVCIhcbX3ibwJjh8DofE",
+      "stripe_product_id": "prod_Tql38MgnGKoVHk",
+      "plan_type": "subscription",
+      "features": [
+        "64,99 € pro Woche, monatlich abgerechnet (259,96 €)",
+        "Antwort von einem lizenzierten Therapeuten innerhalb von 24 Stunden",
+        "Vier 45-minütige Live-Sitzungen pro Monat",
+        "Stimmungstracker, Journaling und Affirmation",
+        "Monatlich kündbar"
+      ],
+      "quotas": {
+        "offline_messages_per_day": 0,
+        "message_word_limit": 0,
+        "live_sessions_per_month": 4,
+        "journal_unlimited": true,
+        "mood_tracker_unlimited": true,
+        "affirmations_unlimited": true
+      },
+      "display_price": "64,99 €/Woche",
+      "display_billing": "Monatliche Abrechnung von 259,96 €",
+      "popular": true
+    },
+    {
+      "id": "one_time_session",
+      "name": "Einmalige Sitzung",
+      "price": 79.99,
+      "currency": "EUR",
+      "billing_period": "one_time",
+      "actual_charge": 79.99,
+      "stripe_price_id": "price_1St3aSCIhcbX3ibwNXoBqyMO",
+      "stripe_product_id": "prod_Tql6ICKUDCuDCr",
+      "plan_type": "one_time",
+      "features": [
+        "79,99 € pro Sitzung",
+        "45-minütige Sitzung via Audio, Video oder Chat",
+        "Lizenzierter Therapeut"
+      ],
+      "quotas": {
+        "offline_messages_per_day": 0,
+        "message_word_limit": 0,
+        "live_sessions_per_month": 1,
+        "journal_unlimited": false,
+        "mood_tracker_unlimited": false,
+        "affirmations_unlimited": false
+      },
+      "display_price": "79,99 €/Sitzung",
+      "display_billing": "Einmalige Zahlung",
+      "popular": false
+    },
+    {
+      "id": "couples_support_monthly",
+      "name": "Paar-Voll-Support-Plan",
+      "price": 84.99,
+      "currency": "EUR",
+      "billing_period": "weekly",
+      "billing_cycle": "monthly",
+      "actual_charge": 339.96,
+      "stripe_price_id": "price_1St3ZtCIhcbX3ibwQHlxN9TI",
+      "stripe_product_id": "prod_Tql69WrC9MXspD",
+      "plan_type": "subscription",
+      "features": [
+        "84,99 € pro Woche, monatlich abgerechnet (339,96 €)",
+        "Vier 45-minütige Live-Sitzungen pro Monat",
+        "Stimmungstracker, Journaling und Affirmation",
+        "Monatlich kündbar"
+      ],
+      "quotas": {
+        "offline_messages_per_day": 0,
+        "message_word_limit": 0,
+        "live_sessions_per_month": 4,
+        "journal_unlimited": true,
+        "mood_tracker_unlimited": true,
+        "affirmations_unlimited": true
+      },
+      "display_price": "84,99 €/Woche",
+      "display_billing": "Monatliche Abrechnung von 339,96 €",
+      "popular": false
+    }
+  ],
+  "therapy_session_plans_hr": [
+    {
+      "id": "basic_monthly",
+      "name": "Osnovni Plan",
+      "price": 9.99,
+      "currency": "EUR",
+      "billing_period": "weekly",
+      "billing_cycle": "monthly",
+      "actual_charge": 39.96,
+      "stripe_price_id": "price_1Si7hcCIhcbX3ibwhH9nm3Fj",
+      "stripe_product_id": "prod_TfScxVz3JErPaM",
+      "plan_type": "subscription",
+      "features": [
+        "9,99 € tjedno, naplaćuje se mjesečno (39,96 €)",
+        "5 dnevnih poruka s ograničenjem od 2500 riječi",
+        "Odgovor licenciranog terapeuta unutar 24 sata",
+        "Chat, Praćenje raspoloženja, Dnevnik i Afirmacije"
+      ],
+      "quotas": {
+        "offline_messages_per_day": 5,
+        "message_word_limit": 2500,
+        "live_sessions_per_month": 0,
+        "journal_unlimited": true,
+        "mood_tracker_unlimited": true,
+        "affirmations_unlimited": true
+      },
+      "display_price": "9,99 €/tjedno",
+      "display_billing": "Naplaćuje se mjesečno 39,96 €",
+      "popular": false
+    },
+    {
+      "id": "full_support_monthly",
+      "name": "Plan Pune Podrške",
+      "price": 64.99,
+      "currency": "EUR",
+      "billing_period": "weekly",
+      "billing_cycle": "monthly",
+      "actual_charge": 259.96,
+      "stripe_price_id": "price_1St3XVCIhcbX3ibwJjh8DofE",
+      "stripe_product_id": "prod_Tql38MgnGKoVHk",
+      "plan_type": "subscription",
+      "features": [
+        "64,99 € tjedno, naplaćuje se mjesečno (259,96 €)",
+        "Odgovor licenciranog terapeuta unutar 24 sata",
+        "Četiri 45-minutne sesije uživo mjesečno",
+        "Praćenje raspoloženja, Dnevnik i Afirmacije",
+        "Može se otkazati na mjesečnoj bazi"
+      ],
+      "quotas": {
+        "offline_messages_per_day": 0,
+        "message_word_limit": 0,
+        "live_sessions_per_month": 4,
+        "journal_unlimited": true,
+        "mood_tracker_unlimited": true,
+        "affirmations_unlimited": true
+      },
+      "display_price": "64,99 €/tjedno",
+      "display_billing": "Naplaćuje se mjesečno 259,96 €",
+      "popular": true
+    },
+    {
+      "id": "one_time_session",
+      "name": "Jednokratna Sesija",
+      "price": 79.99,
+      "currency": "EUR",
+      "billing_period": "one_time",
+      "actual_charge": 79.99,
+      "stripe_price_id": "price_1St3aSCIhcbX3ibwYRy690wu",
+      "stripe_product_id": "prod_Tql6ICKUDCuDCr",
+      "plan_type": "one_time",
+      "features": [
+        "79,99 € po sesiji",
+        "45-minutna sesija putem zvuka, videa ili chata",
+        "Licencirani terapeut"
+      ],
+      "quotas": {
+        "offline_messages_per_day": 0,
+        "message_word_limit": 0,
+        "live_sessions_per_month": 1,
+        "journal_unlimited": false,
+        "mood_tracker_unlimited": false,
+        "affirmations_unlimited": false
+      },
+      "display_price": "79,99 €/sesija",
+      "display_billing": "Jednokratno plaćanje",
+      "popular": false
+    },
+    {
+      "id": "couples_support_monthly",
+      "name": "Plan Pune Podrške za Parove",
+      "price": 84.99,
+      "currency": "EUR",
+      "billing_period": "weekly",
+      "billing_cycle": "monthly",
+      "actual_charge": 339.96,
+      "stripe_price_id": "price_1St3ZtCIhcbX3ibwQHlxN9TI",
+      "stripe_product_id": "prod_Tql69WrC9MXspD",
+      "plan_type": "subscription",
+      "features": [
+        "84,99 € tjedno, naplaćuje se mjesečno (339,96 €)",
+        "Četiri 45-minutne sesije uživo mjesečno",
+        "Praćenje raspoloženja, Dnevnik i Afirmacije",
+        "Može se otkazati na mjesečnoj bazi"
+      ],
+      "quotas": {
+        "offline_messages_per_day": 0,
+        "message_word_limit": 0,
+        "live_sessions_per_month": 4,
+        "journal_unlimited": true,
+        "mood_tracker_unlimited": true,
+        "affirmations_unlimited": true
+      },
+      "display_price": "84,99 €/tjedno",
+      "display_billing": "Naplaćuje se mjesečno 339,96 €",
+      "popular": false
+    }
+  ],
+  "therapy_session_plans_el": [
+    {
+      "id": "basic_monthly",
+      "name": "Βασικό Πλάνο",
+      "price": 9.99,
+      "currency": "EUR",
+      "billing_period": "weekly",
+      "billing_cycle": "monthly",
+      "actual_charge": 39.96,
+      "stripe_price_id": "price_1Si7hcCIhcbX3ibwhH9nm3Fj",
+      "stripe_product_id": "prod_TfScxVz3JErPaM",
+      "plan_type": "subscription",
+      "features": [
+        "9,99 € ανά εβδομάδα, χρεώνεται μηνιαίως (39,96 €)",
+        "5 καθημερινά μηνύματα με όριο 2500 λέξεων",
+        "Απάντηση από αδειούχο θεραπευτή εντός 24 ωρών",
+        "Chat, Καταγραφή διάθεσης, Ημερολόγιο και Θετικές δηλώσεις"
+      ],
+      "quotas": {
+        "offline_messages_per_day": 5,
+        "message_word_limit": 2500,
+        "live_sessions_per_month": 0,
+        "journal_unlimited": true,
+        "mood_tracker_unlimited": true,
+        "affirmations_unlimited": true
+      },
+      "display_price": "9,99 €/εβδομάδα",
+      "display_billing": "Χρέωση μηνιαίως στα 39,96 €",
+      "popular": false
+    },
+    {
+      "id": "full_support_monthly",
+      "name": "Πλάνο Πλήρους Υποστήριξης",
+      "price": 64.99,
+      "currency": "EUR",
+      "billing_period": "weekly",
+      "billing_cycle": "monthly",
+      "actual_charge": 259.96,
+      "stripe_price_id": "price_1St3XVCIhcbX3ibwJjh8DofE",
+      "stripe_product_id": "prod_Tql38MgnGKoVHk",
+      "plan_type": "subscription",
+      "features": [
+        "64,99 € ανά εβδομάδα, χρεώνεται μηνιαίως (259,96 €)",
+        "Απάντηση από αδειούχο θεραπευτή εντός 24 ωρών",
+        "Τέσσερις ζωντανές συνεδρίες 45 λεπτών το μήνα",
+        "Καταγραφή διάθεσης, Ημερολόγιο και Θετικές δηλώσεις",
+        "Μπορεί να τερματιστεί σε μηνιαία βάση"
+      ],
+      "quotas": {
+        "offline_messages_per_day": 0,
+        "message_word_limit": 0,
+        "live_sessions_per_month": 4,
+        "journal_unlimited": true,
+        "mood_tracker_unlimited": true,
+        "affirmations_unlimited": true
+      },
+      "display_price": "64,99 €/εβδομάδα",
+      "display_billing": "Χρέωση μηνιαίως στα 259,96 €",
+      "popular": true
+    },
+    {
+      "id": "one_time_session",
+      "name": "Μοναδική Συνεδρία",
+      "price": 79.99,
+      "currency": "EUR",
+      "billing_period": "one_time",
+      "actual_charge": 79.99,
+      "stripe_price_id": "price_1St3aSCIhcbX3ibwYRy690wu",
+      "stripe_product_id": "prod_Tql6ICKUDCuDCr",
+      "plan_type": "one_time",
+      "features": [
+        "79,99 € ανά συνεδρία",
+        "Συνεδρία 45 λεπτών μέσω ήχου, εικόνας ή συνομιλίας",
+        "Αδειούχος θεραπευτής"
+      ],
+      "quotas": {
+        "offline_messages_per_day": 0,
+        "message_word_limit": 0,
+        "live_sessions_per_month": 1,
+        "journal_unlimited": false,
+        "mood_tracker_unlimited": false,
+        "affirmations_unlimited": false
+      },
+      "display_price": "79,99 €/συνεδρία",
+      "display_billing": "Εφάπαξ πληρωμή",
+      "popular": false
+    },
+    {
+      "id": "couples_support_monthly",
+      "name": "Πλάνο Πλήρους Υποστήριξης για Ζευγάρια",
+      "price": 84.99,
+      "currency": "EUR",
+      "billing_period": "weekly",
+      "billing_cycle": "monthly",
+      "actual_charge": 339.96,
+      "stripe_price_id": "price_1St3ZtCIhcbX3ibwQHlxN9TI",
+      "stripe_product_id": "prod_Tql69WrC9MXspD",
+      "plan_type": "subscription",
+      "features": [
+        "84,99 € ανά εβδομάδα, χρεώνεται μηνιαίως (339,96 €)",
+        "Τέσσερις ζωντανές συνεδρίες 45 λεπτών το μήνα",
+        "Καταγραφή διάθεσης, Ημερολόγιο και Θετικές δηλώσεις",
+        "Μπορεί να τερματιστεί σε μηνιαία βάση"
+      ],
+      "quotas": {
+        "offline_messages_per_day": 0,
+        "message_word_limit": 0,
+        "live_sessions_per_month": 4,
+        "journal_unlimited": true,
+        "mood_tracker_unlimited": true,
+        "affirmations_unlimited": true
+      },
+      "display_price": "84,99 €/εβδομάδα",
+      "display_billing": "Χρέωση μηνιαίως στα 339,96 €",
+      "popular": false
+    }
+  ],
+  "session_payment_methods_en": [
+    {
+      "id": "stripe_checkout",
+      "name": "Secure Checkout",
+      "enabled": true,
+      "supported_cards": [
+        "visa",
+        "mastercard",
+        "amex"
+      ],
+      "require_3ds": true,
+      "logo_url": "",
+      "display_name": "Card / SEPA"
+    },
+    {
+      "id": "paypal_checkout",
+      "name": "PayPal",
+      "enabled": true,
+      "logo_url": "",
+      "display_name": "PayPal",
+      "require_redirect": true,
+      "client_id": "AUSCKRSMuDn_KUzxo0XdiJAd5ygWYpcM7n5VrRpZZkq2gwcu8oge_VgtoxW2FwnWitABUjepfKIylVzv",
+      "webhook_id": "9K435456HB776181D",
+      "plan_ids": {
+        "basic_monthly": "P-8BL4138352785851YNGYSDUY",
+        "full_support_monthly": "P-2MA28524XE959433BNGYSSMI",
+        "couples_support_monthly": "P-17H46007E5736320VNGYSUWY"
+      }
+    }
+  ],
+  "session_payment_methods_de": [
+    {
+      "id": "stripe_checkout",
+      "name": "Sichere Bezahlung",
+      "enabled": true,
+      "supported_cards": [
+        "visa",
+        "mastercard",
+        "amex"
+      ],
+      "require_3ds": true,
+      "logo_url": "",
+      "display_name": "Kreditkarte / SEPA"
+    },
+    {
+      "id": "paypal_checkout",
+      "name": "PayPal",
+      "enabled": true,
+      "logo_url": "",
+      "display_name": "PayPal",
+      "require_redirect": true,
+      "client_id": "AUSCKRSMuDn_KUzxo0XdiJAd5ygWYpcM7n5VrRpZZkq2gwcu8oge_VgtoxW2FwnWitABUjepfKIylVzv",
+      "webhook_id": "9K435456HB776181D",
+      "plan_ids": {
+        "basic_monthly": "P-8BL4138352785851YNGYSDUY",
+        "full_support_monthly": "P-2MA28524XE959433BNGYSSMI",
+        "couples_support_monthly": "P-17H46007E5736320VNGYSUWY"
+      }
+    }
+  ],
+  "session_payment_methods_hr": [
+    {
+      "id": "stripe_checkout",
+      "name": "Sigurno plaćanje",
+      "enabled": true,
+      "supported_cards": [
+        "visa",
+        "mastercard",
+        "amex"
+      ],
+      "require_3ds": true,
+      "logo_url": "",
+      "display_name": "Kreditna kartica / SEPA"
+    },
+    {
+      "id": "paypal_checkout",
+      "name": "PayPal",
+      "enabled": true,
+      "logo_url": "",
+      "display_name": "PayPal",
+      "require_redirect": true,
+      "client_id": "AUSCKRSMuDn_KUzxo0XdiJAd5ygWYpcM7n5VrRpZZkq2gwcu8oge_VgtoxW2FwnWitABUjepfKIylVzv",
+      "webhook_id": "9K435456HB776181D",
+      "plan_ids": {
+        "basic_monthly": "P-8BL4138352785851YNGYSDUY",
+        "full_support_monthly": "P-2MA28524XE959433BNGYSSMI",
+        "couples_support_monthly": "P-17H46007E5736320VNGYSUWY"
+      }
+    }
+  ],
+  "session_payment_methods_el": [
+    {
+      "id": "stripe_checkout",
+      "name": "Secure Checkout",
+      "enabled": true,
+      "supported_cards": [
+        "visa",
+        "mastercard",
+        "amex"
+      ],
+      "require_3ds": true,
+      "logo_url": "",
+      "display_name": "Card / SEPA"
+    },
+    {
+      "id": "paypal_checkout",
+      "name": "PayPal",
+      "enabled": true,
+      "logo_url": "",
+      "display_name": "PayPal",
+      "require_redirect": true,
+      "client_id": "AUSCKRSMuDn_KUzxo0XdiJAd5ygWYpcM7n5VrRpZZkq2gwcu8oge_VgtoxW2FwnWitABUjepfKIylVzv",
+      "webhook_id": "9K435456HB776181D",
+      "plan_ids": {
+        "basic_monthly": "P-8BL4138352785851YNGYSDUY",
+        "full_support_monthly": "P-2MA28524XE959433BNGYSSMI",
+        "couples_support_monthly": "P-17H46007E5736320VNGYSUWY"
+      }
+    }
+  ],
+  "paypal_config": {
+    "environment": "production",
+    "client_id": "AUSCKRSMuDn_KUzxo0XdiJAd5ygWYpcM7n5VrRpZZkq2gwcu8oge_VgtoxW2FwnWitABUjepfKIylVzv",
+    "webhook_id": "9K435456HB776181D",
+    "plan_ids": {
+      "basic_monthly": "P-8BL4138352785851YNGYSDUY",
+      "full_support_monthly": "P-2MA28524XE959433BNGYSSMI",
+      "couples_support_monthly": "P-17H46007E5736320VNGYSUWY"
+    },
+    "return_url": "/payment-success",
+    "cancel_url": "/payment"
+  },
+  "stripe_config": {
+    "publishable_key": "pk_live_51S4eTkCIhcbX3ibwmA1aCI1wIG9wc80dRQY8r7wT6u0zaBWzPcnXt6hNys371k65AbcGFfuvhlSkNF8yc6LIOzrk00R1Z7TwN5",
+    "backend_url": "https://europe-west1-thepsy-f950e.cloudfunctions.net",
+    "webhook_endpoint": "/stripeWebhook"
+  }
+}
