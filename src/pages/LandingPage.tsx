@@ -10,8 +10,6 @@ import { remoteConfig } from '@/lib/firebase';
 import { usePayment } from "@/hooks/usePayment";
 
 import { Menu, X } from "lucide-react";
-
-// Assets
 import introIllustration from "../assets/images/intro_illustration.png";
 
 const LandingPage = () => {
@@ -20,20 +18,16 @@ const LandingPage = () => {
   const { currentUser, userData, loading } = useAuth();
   const { state: paymentState } = usePayment();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
-
-  // Find prices for display
   const getPlanPrice = (planId: string) => {
-    // Try simplified packages first (minimized/secure config)
     if (paymentState.packages && paymentState.packages[planId]) {
       return paymentState.packages[planId].display_price;
     }
-    // Fallback to full plans
     const plan = paymentState.plans.find(p => p.id === planId);
     return plan?.display_price || "";
   };
 
   const basicPrice = getPlanPrice('basic_monthly') || getPlanPrice('basic_plan') || getPlanPrice('basis_plan') || "€9.99/week";
-  const fullPrice = getPlanPrice('full_support_monthly') || getPlanPrice('full_support_plan') || "€64.99/week";
+  const fullPrice = getPlanPrice('plus_weekly') || getPlanPrice('full_support_monthly') || getPlanPrice('full_support_plan') || "€64.99/week";
   const singlePrice = getPlanPrice('one_time_session') || "€79.99/session";
   const couplesPrice = getPlanPrice('couples_support_monthly') || "€84.99/week";
 
@@ -78,7 +72,6 @@ const LandingPage = () => {
 
   return (
     <div className="landing-page-container">
-      {/* SCOPED STYLES */}
       <style>{`
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -741,7 +734,6 @@ const LandingPage = () => {
         }
       `}</style>
 
-      {/* NAV */}
       <nav className="lp-nav">
         <a href="#" className="nav-logo" onClick={(e) => { e.preventDefault(); window.scrollTo({top: 0, behavior: 'smooth'}); }}>
           <Logo size="sm" showText={true} />
@@ -757,14 +749,12 @@ const LandingPage = () => {
 
         <div className="nav-right">
           <LanguageSwitcher isInline />
-          {/* HAMBURGER FOR MOBILE */}
           <button className="hamburger" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
             {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
         </div>
       </nav>
 
-      {/* MOBILE SIDEBAR */}
       <div className={`mobile-overlay ${isMobileMenuOpen ? 'open' : ''}`} onClick={() => setIsMobileMenuOpen(false)}></div>
       <div className={`mobile-sidebar ${isMobileMenuOpen ? 'open' : ''}`}>
         <a href="#angebote" onClick={() => setIsMobileMenuOpen(false)}>{t('landing.nav.angebote')}</a>
@@ -774,7 +764,6 @@ const LandingPage = () => {
         <a href="#" onClick={() => { setIsMobileMenuOpen(false); navigate("/signup"); }} className="nav-cta" style={{ textAlign: 'center' }}>{t('landing.nav.start_now')}</a>
       </div>
 
-      {/* HERO */}
       <section className="hero" id="start">
         <div className="hero-inner">
           <div className="hero-text">
@@ -806,7 +795,6 @@ const LandingPage = () => {
         </div>
       </section>
 
-      {/* STATS */}
       <div className="stats">
         <div className="stat-item">
           <div className="stat-num">{t('landing.stats.wait_time_system_num')}</div>
@@ -826,7 +814,6 @@ const LandingPage = () => {
         </div>
       </div>
 
-      {/* HOW IT WORKS */}
       <section id="wie-es-funktioniert" className="lp-section">
         <p className="section-label">{t('landing.how_it_works.label')}</p>
         <h2 className="section-title">{t('landing.how_it_works.title')}</h2>
@@ -913,8 +900,6 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
-
-      {/* TESTIMONIALS */}
       <section className="testimonials-section" id="ueber-uns">
         <p className="section-label">{t('landing.testimonials.label')}</p>
         <h2 className="section-title">{t('landing.testimonials.title')}</h2>
@@ -937,8 +922,6 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
-
-      {/* CTA */}
       <section className="cta-section">
         <h2>{t('landing.cta.title')}</h2>
         <p>{t('landing.cta.subtitle')}</p>
