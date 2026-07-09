@@ -89,7 +89,16 @@ const PlanCard = ({
                                 type="number" step="0.01" min="0"
                                 className="pl-7"
                                 value={values.price ?? 0}
-                                onChange={(e) => setValues(v => ({ ...v, price: parseFloat(e.target.value) || 0 }))}
+                                onChange={(e) => {
+                                    const newPrice = parseFloat(e.target.value) || 0;
+                                    setValues(v => ({
+                                        ...v,
+                                        price: newPrice,
+                                        // Weekly plans are billed monthly (x4) — keep the total in sync
+                                        // automatically so it never goes stale when only the price changes.
+                                        ...(plan.show_monthly_total ? { actual_charge: Math.round(newPrice * 4 * 100) / 100 } : {}),
+                                    }));
+                                }}
                             />
                         </div>
                     </div>
@@ -113,20 +122,27 @@ const PlanCard = ({
                         </div>
                     )}
 
-                    {plan.actual_charge !== undefined && (
+                    {(plan.show_monthly_total || plan.actual_charge !== undefined) && (
                         <div>
-                            <Label className="text-xs text-gray-500">Billed amount (monthly total)</Label>
+                            <Label className="text-xs text-gray-500">
+                                {plan.show_monthly_total
+                                    ? 'Billed amount (monthly total) — auto-calculated as price × 4'
+                                    : 'Billed amount'}
+                            </Label>
                             <div className="relative mt-1">
                                 <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
                                     {currencySymbol(plan.currency)}
                                 </span>
                                 <Input
                                     type="number" step="0.01" min="0"
-                                    className="pl-7"
+                                    className={`pl-7 ${plan.show_monthly_total ? 'bg-gray-50' : ''}`}
                                     value={values.actual_charge ?? 0}
                                     onChange={(e) => setValues(v => ({ ...v, actual_charge: parseFloat(e.target.value) || 0 }))}
                                 />
                             </div>
+                            {plan.show_monthly_total && (
+                                <p className="text-[11px] text-gray-400 mt-1">Recalculates automatically when you change the weekly price above. You can still type a different number here if needed.</p>
+                            )}
                         </div>
                     )}
 

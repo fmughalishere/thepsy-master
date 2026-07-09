@@ -274,8 +274,9 @@
         "message_word_limit": 500
       },
       "display_price": "€49.99/week",
-      "display_billing": "30-minute sessions",
-      "popular": false
+      "display_billing": "Billed monthly at €199.96 · 30-minute sessions",
+      "popular": false,
+      "actual_charge": 199.96
     },
     {
       "id": "coaching_bimonthly",

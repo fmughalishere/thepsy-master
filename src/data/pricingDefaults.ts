@@ -1,13 +1,3 @@
-// Default/fallback pricing metadata, mirrored from the Firebase Remote Config
-// "payments" template. These values are only used as the STARTING POINT shown
-// in the Admin Pricing panel the very first time (before any override has been
-// saved to Firestore). Once an admin saves a price, the live value always comes
-// from Firestore (see `pricing/plans` and `pricing/addons` documents).
-//
-// NOTE: Editing a price here does NOT change what Stripe actually charges.
-// Stripe Price IDs (in Remote Config) control the real charge amount and are
-// managed separately — see PricingManagement.tsx for the on-screen warning.
-
 export type PricingPlanCategory =
     | 'basic'
     | 'plus'
@@ -25,6 +15,7 @@ export interface PlanPricingDefault {
     display_price: string;
     display_billing?: string;
     has_weekly_frequency?: boolean; // Plus plan uses frequency_prices.weekly
+    show_monthly_total?: boolean; // true for "1x per week" plans — admin panel auto-calculates price × 4
     unit_label: string; // shown next to the price input, e.g. "/week"
 }
 
@@ -51,12 +42,14 @@ export const DEFAULT_PLAN_PRICING: PlanPricingDefault[] = [
         id: 'basic_monthly', name: 'Basic Plan', category: 'basic', currency: 'EUR',
         price: 9.99, actual_charge: 39.96,
         display_price: '€9.99/week', display_billing: 'Billed monthly at €39.96',
+        show_monthly_total: true,
         unit_label: '/week',
     },
     {
         id: 'plus_weekly', name: 'Plus Plan — 1x per week', category: 'plus', currency: 'EUR',
         price: 64.99, actual_charge: 259.96,
         display_price: '€64.99/week', display_billing: 'Billed monthly at €259.96 · 1 session per week',
+        show_monthly_total: true,
         unit_label: '/week',
     },
     {
@@ -81,6 +74,7 @@ export const DEFAULT_PLAN_PRICING: PlanPricingDefault[] = [
         id: 'couples_support_monthly', name: 'Couples Therapy — 1x per week', category: 'therapy_couples', currency: 'EUR',
         price: 84.99, actual_charge: 339.96,
         display_price: '€84.99/week', display_billing: 'Billed monthly at €339.96',
+        show_monthly_total: true,
         unit_label: '/week',
     },
     {
@@ -97,8 +91,9 @@ export const DEFAULT_PLAN_PRICING: PlanPricingDefault[] = [
     },
     {
         id: 'coaching_weekly', name: 'Coaching — 1x per week', category: 'coaching', currency: 'EUR',
-        price: 49.99,
-        display_price: '€49.99/week', display_billing: '30-minute sessions',
+        price: 49.99, actual_charge: 199.96,
+        display_price: '€49.99/week', display_billing: 'Billed monthly at €199.96 · 30-minute sessions',
+        show_monthly_total: true,
         unit_label: '/week',
     },
     {
