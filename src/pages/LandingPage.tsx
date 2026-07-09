@@ -10,6 +10,8 @@ import { remoteConfig } from '@/lib/firebase';
 import { usePayment } from "@/hooks/usePayment";
 
 import { Menu, X } from "lucide-react";
+
+// Assets
 import introIllustration from "../assets/images/intro_illustration.png";
 
 const LandingPage = () => {
@@ -18,18 +20,35 @@ const LandingPage = () => {
   const { currentUser, userData, loading } = useAuth();
   const { state: paymentState } = usePayment();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
+
+  // Find prices for display
   const getPlanPrice = (planId: string) => {
+    // Try simplified packages first (minimized/secure config)
     if (paymentState.packages && paymentState.packages[planId]) {
       return paymentState.packages[planId].display_price;
     }
+    // Fallback to full plans
     const plan = paymentState.plans.find(p => p.id === planId);
     return plan?.display_price || "";
   };
 
   const basicPrice = getPlanPrice('basic_monthly') || getPlanPrice('basic_plan') || getPlanPrice('basis_plan') || "€9.99/week";
-  const fullPrice = getPlanPrice('plus_weekly') || getPlanPrice('full_support_monthly') || getPlanPrice('full_support_plan') || "€64.99/week";
   const singlePrice = getPlanPrice('one_time_session') || "€79.99/session";
-  const couplesPrice = getPlanPrice('couples_support_monthly') || "€84.99/week";
+
+  // Plus Plan variants
+  const plusWeeklyPrice = getPlanPrice('plus_weekly') || getPlanPrice('full_support_monthly') || "€64.99/week";
+  const plusBimonthlyPrice = getPlanPrice('plus_bimonthly') || "€34.99/week";
+  const plusMonthlyPrice = getPlanPrice('plus_monthly') || "€19.99/week";
+
+  // Couples Therapy variants
+  const couplesWeeklyPrice = getPlanPrice('couples_support_monthly') || "€84.99/week";
+  const couplesBimonthlyPrice = getPlanPrice('therapy_couples_bimonthly') || "€44.99/week";
+  const couplesMonthlyPrice = getPlanPrice('therapy_couples_monthly') || "€29.99/week";
+
+  // Coaching variants
+  const coachingWeeklyPrice = getPlanPrice('coaching_weekly') || "€49.99/week";
+  const coachingBimonthlyPrice = getPlanPrice('coaching_bimonthly') || "€24.99/week";
+  const coachingMonthlyPrice = getPlanPrice('coaching_monthly') || "€14.99/week";
 
   useEffect(() => {
 
@@ -72,6 +91,7 @@ const LandingPage = () => {
 
   return (
     <div className="landing-page-container">
+      {/* SCOPED STYLES */}
       <style>{`
         * { margin: 0; padding: 0; box-sizing: border-box; }
         :root {
@@ -586,6 +606,13 @@ const LandingPage = () => {
           font-weight: 300;
         }
 
+        .service-tags {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 8px;
+          margin-top: 12px;
+        }
+
         .service-tag {
           display: inline-block;
           margin-top: 12px;
@@ -595,6 +622,10 @@ const LandingPage = () => {
           font-weight: 500;
           background: var(--teal-light);
           color: var(--teal-dark);
+        }
+
+        .service-tags .service-tag {
+          margin-top: 0;
         }
 
         /* TESTIMONIALS */
@@ -734,6 +765,7 @@ const LandingPage = () => {
         }
       `}</style>
 
+      {/* NAV */}
       <nav className="lp-nav">
         <a href="#" className="nav-logo" onClick={(e) => { e.preventDefault(); window.scrollTo({top: 0, behavior: 'smooth'}); }}>
           <Logo size="sm" showText={true} />
@@ -749,12 +781,14 @@ const LandingPage = () => {
 
         <div className="nav-right">
           <LanguageSwitcher isInline />
+          {/* HAMBURGER FOR MOBILE */}
           <button className="hamburger" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
             {isMobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
           </button>
         </div>
       </nav>
 
+      {/* MOBILE SIDEBAR */}
       <div className={`mobile-overlay ${isMobileMenuOpen ? 'open' : ''}`} onClick={() => setIsMobileMenuOpen(false)}></div>
       <div className={`mobile-sidebar ${isMobileMenuOpen ? 'open' : ''}`}>
         <a href="#angebote" onClick={() => setIsMobileMenuOpen(false)}>{t('landing.nav.angebote')}</a>
@@ -764,6 +798,7 @@ const LandingPage = () => {
         <a href="#" onClick={() => { setIsMobileMenuOpen(false); navigate("/signup"); }} className="nav-cta" style={{ textAlign: 'center' }}>{t('landing.nav.start_now')}</a>
       </div>
 
+      {/* HERO */}
       <section className="hero" id="start">
         <div className="hero-inner">
           <div className="hero-text">
@@ -795,6 +830,7 @@ const LandingPage = () => {
         </div>
       </section>
 
+      {/* STATS */}
       <div className="stats">
         <div className="stat-item">
           <div className="stat-num">{t('landing.stats.wait_time_system_num')}</div>
@@ -814,6 +850,7 @@ const LandingPage = () => {
         </div>
       </div>
 
+      {/* HOW IT WORKS */}
       <section id="wie-es-funktioniert" className="lp-section">
         <p className="section-label">{t('landing.how_it_works.label')}</p>
         <h2 className="section-title">{t('landing.how_it_works.title')}</h2>
@@ -866,7 +903,11 @@ const LandingPage = () => {
               <div>
                 <h3>{t('landing.services.video_title')}</h3>
                 <p>{t('landing.services.video_text')}</p>
-                <span className="service-tag">{t('landing.services.video_tag')} ({fullPrice})</span>
+                <div className="service-tags">
+                  <span className="service-tag">{t('landing.services.video_tag_weekly')} ({plusWeeklyPrice})</span>
+                  <span className="service-tag">{t('landing.services.video_tag_bimonthly')} ({plusBimonthlyPrice})</span>
+                  <span className="service-tag">{t('landing.services.video_tag_monthly')} ({plusMonthlyPrice})</span>
+                </div>
               </div>
             </div>
             <div className="service-card">
@@ -894,12 +935,34 @@ const LandingPage = () => {
               <div>
                 <h3>{t('landing.services.couples_title')}</h3>
                 <p>{t('landing.services.couples_text')}</p>
-                <span className="service-tag">{t('landing.services.couples_tag')} ({couplesPrice})</span>
+                <div className="service-tags">
+                  <span className="service-tag">{t('landing.services.couples_tag_weekly')} ({couplesWeeklyPrice})</span>
+                  <span className="service-tag">{t('landing.services.couples_tag_bimonthly')} ({couplesBimonthlyPrice})</span>
+                  <span className="service-tag">{t('landing.services.couples_tag_monthly')} ({couplesMonthlyPrice})</span>
+                </div>
+              </div>
+            </div>
+            <div className="service-card">
+              <div className="service-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="#7bbfc5" strokeWidth="2" strokeLinecap="round">
+                  <path d="M12 20v-6M6 20V10M18 20V4"/>
+                </svg>
+              </div>
+              <div>
+                <h3>{t('landing.services.coaching_title')}</h3>
+                <p>{t('landing.services.coaching_text')}</p>
+                <div className="service-tags">
+                  <span className="service-tag">{t('landing.services.coaching_tag_weekly')} ({coachingWeeklyPrice})</span>
+                  <span className="service-tag">{t('landing.services.coaching_tag_bimonthly')} ({coachingBimonthlyPrice})</span>
+                  <span className="service-tag">{t('landing.services.coaching_tag_monthly')} ({coachingMonthlyPrice})</span>
+                </div>
               </div>
             </div>
           </div>
         </div>
       </section>
+
+      {/* TESTIMONIALS */}
       <section className="testimonials-section" id="ueber-uns">
         <p className="section-label">{t('landing.testimonials.label')}</p>
         <h2 className="section-title">{t('landing.testimonials.title')}</h2>
@@ -922,6 +985,8 @@ const LandingPage = () => {
           </div>
         </div>
       </section>
+
+      {/* CTA */}
       <section className="cta-section">
         <h2>{t('landing.cta.title')}</h2>
         <p>{t('landing.cta.subtitle')}</p>
