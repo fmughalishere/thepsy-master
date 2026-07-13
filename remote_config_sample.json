@@ -78,8 +78,9 @@
       "plan_category": "plus",
       "price": 34.99,
       "currency": "EUR",
-      "billing_period": "weekly",
+      "billing_period": "monthly",
       "billing_cycle": "monthly",
+      "actual_charge": 34.99,
       "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
       "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
       "setup_note": "NOT LIVE YET — needs a real Stripe Price created (recurring, €34.99).",
@@ -96,7 +97,7 @@
         "live_sessions_per_month": 2,
         "session_duration_minutes": 45
       },
-      "display_price": "€34.99/week",
+      "display_price": "€34.99/month",
       "display_billing": "2 sessions per month",
       "popular": false
     },
@@ -106,8 +107,9 @@
       "plan_category": "plus",
       "price": 19.99,
       "currency": "EUR",
-      "billing_period": "weekly",
+      "billing_period": "monthly",
       "billing_cycle": "monthly",
+      "actual_charge": 19.99,
       "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
       "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
       "setup_note": "NOT LIVE YET — needs a real Stripe Price created (recurring, €19.99).",
@@ -124,7 +126,7 @@
         "live_sessions_per_month": 1,
         "session_duration_minutes": 45
       },
-      "display_price": "€19.99/week",
+      "display_price": "€19.99/month",
       "display_billing": "1 session per month",
       "popular": false
     },
@@ -197,8 +199,9 @@
       "plan_category": "therapy_couples",
       "price": 44.99,
       "currency": "EUR",
-      "billing_period": "weekly",
+      "billing_period": "monthly",
       "billing_cycle": "monthly",
+      "actual_charge": 44.99,
       "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
       "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
       "setup_note": "NOT LIVE YET — needs a real Stripe Price created (recurring, €44.99) before this plan will work. The placeholder value will safely block checkout with a clear error until replaced.",
@@ -215,7 +218,7 @@
         "live_sessions_per_month": 2,
         "session_duration_minutes": 45
       },
-      "display_price": "€44.99/week",
+      "display_price": "€44.99/month",
       "display_billing": "2 sessions per month",
       "popular": false
     },
@@ -225,8 +228,9 @@
       "plan_category": "therapy_couples",
       "price": 29.99,
       "currency": "EUR",
-      "billing_period": "weekly",
+      "billing_period": "monthly",
       "billing_cycle": "monthly",
+      "actual_charge": 29.99,
       "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
       "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
       "setup_note": "NOT LIVE YET — needs a real Stripe Price created (recurring, €29.99) before this plan will work.",
@@ -243,7 +247,7 @@
         "live_sessions_per_month": 1,
         "session_duration_minutes": 45
       },
-      "display_price": "€29.99/week",
+      "display_price": "€29.99/month",
       "display_billing": "1 session per month",
       "popular": false
     },
@@ -284,8 +288,9 @@
       "plan_category": "coaching",
       "price": 24.99,
       "currency": "EUR",
-      "billing_period": "weekly",
+      "billing_period": "monthly",
       "billing_cycle": "monthly",
+      "actual_charge": 24.99,
       "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
       "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
       "setup_note": "NOT LIVE YET — needs a real Stripe Price created (recurring, €24.99).",
@@ -304,7 +309,7 @@
         "session_duration_minutes": 30,
         "message_word_limit": 500
       },
-      "display_price": "€24.99/week",
+      "display_price": "€24.99/month",
       "display_billing": "30-minute sessions · 2x per month",
       "popular": false
     },
@@ -314,8 +319,9 @@
       "plan_category": "coaching",
       "price": 14.99,
       "currency": "EUR",
-      "billing_period": "weekly",
+      "billing_period": "monthly",
       "billing_cycle": "monthly",
+      "actual_charge": 14.99,
       "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
       "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
       "setup_note": "NOT LIVE YET — needs a real Stripe Price created (recurring, €14.99).",
@@ -334,7 +340,7 @@
         "session_duration_minutes": 30,
         "message_word_limit": 500
       },
-      "display_price": "€14.99/week",
+      "display_price": "€14.99/month",
       "display_billing": "30-minute sessions · 1x per month",
       "popular": false
     }
