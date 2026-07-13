@@ -20,9 +20,6 @@ import {
     type PlanPricingDefault, type AddonPricingDefault, type PricingPlanCategory,
 } from "@/data/pricingDefaults";
 
-// Firestore documents that hold the live price overrides. Only the fields
-// actually edited here are written; everything else (names, features,
-// Stripe price IDs, quotas, translations) keeps coming from Remote Config.
 const PLANS_DOC = PRICING_PLANS_DOC;
 const ADDONS_DOC = PRICING_ADDONS_DOC;
 
@@ -39,9 +36,6 @@ const PlanCard = ({
     override?: PlanOverride;
     onSave: (id: string, values: PlanOverride) => Promise<void>;
 }) => {
-    // Every plan now gets a consistent "Billed amount" field.
-    // multiplier = 4 for "1x per week" plans (billed monthly = price x 4).
-    // multiplier = 1 for bimonthly/monthly/one-time plans (price IS the billed total).
     const multiplier = plan.monthly_multiplier ?? 1;
 
     const initial: PlanOverride = {
@@ -56,7 +50,6 @@ const PlanCard = ({
     const [values, setValues] = useState<PlanOverride>(initial);
     const [saving, setSaving] = useState(false);
 
-    // Keep local form in sync if another admin changes it live.
     useEffect(() => {
         setValues(initial);
         // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -130,9 +123,7 @@ const PlanCard = ({
 
                     <div>
                         <Label className="text-xs text-gray-500">
-                            {multiplier > 1
-                                ? `Billed amount (monthly total) — auto-calculated as price × ${multiplier}`
-                                : 'Billed amount'}
+                            {`Billed amount (monthly total) — auto-calculated as price × ${multiplier}`}
                         </Label>
                         <div className="relative mt-1">
                             <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
@@ -146,9 +137,7 @@ const PlanCard = ({
                             />
                         </div>
                         <p className="text-[11px] text-gray-400 mt-1">
-                            {multiplier > 1
-                                ? 'Recalculates automatically when you change the price above. You can still type a different number here if needed.'
-                                : 'Normally matches the price above — editable if you need to override it.'}
+                            Recalculates automatically when you change the price above. You can still type a different number here if needed.
                         </p>
                     </div>
 
