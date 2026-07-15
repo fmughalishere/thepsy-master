@@ -26,8 +26,68 @@ const ROOM_CATEGORIES = [
     'LGBTQ+',
 ];
 
+const FREQUENCIES: { value: SessionFrequency; label: string; sublabel: string }[] = [
+    { value: 'weekly', label: '1x per week', sublabel: 'Most recommended' },
+    { value: 'bimonthly', label: '2x per month', sublabel: 'Good balance' },
+    { value: 'monthly', label: '1x per month', sublabel: 'Flexible option' },
+];
+
 const isRoomsAddon = (addon: AddonConfig) =>
     addon.id === 'rooms' || addon.name?.toLowerCase().includes('room');
+const getFrequencyKey = (p: TherapySessionPlan): SessionFrequency => {
+    if (p.billing_period === 'weekly') return 'weekly';
+    const sessionsPerMonth = (p as any).quotas?.live_sessions_per_month;
+    if (sessionsPerMonth === 2) return 'bimonthly';
+    return 'monthly';
+};
+
+const CATEGORY_DISPLAY_NAMES: Record<string, string> = {
+    plus: 'Plus Plan',
+    coaching: 'Coaching',
+    therapy_couples: 'Couples Therapy',
+};
+
+interface DisplayPlanGroup {
+    card: TherapySessionPlan;
+    frequencyPlanMap?: Partial<Record<SessionFrequency, TherapySessionPlan>>;
+}
+
+const buildDisplayGroups = (categoryPlans: TherapySessionPlan[]): DisplayPlanGroup[] => {
+    const byCategory: Record<string, TherapySessionPlan[]> = {};
+    categoryPlans.forEach(p => {
+        const cat = p.plan_category || 'basic';
+        if (!byCategory[cat]) byCategory[cat] = [];
+        byCategory[cat].push(p);
+    });
+
+    const groups: DisplayPlanGroup[] = [];
+    Object.entries(byCategory).forEach(([cat, plansInCat]) => {
+        if (plansInCat.length > 1) {
+            const frequencyPlanMap: Partial<Record<SessionFrequency, TherapySessionPlan>> = {};
+            plansInCat.forEach(p => {
+                frequencyPlanMap[getFrequencyKey(p)] = p;
+            });
+            const primary = frequencyPlanMap.weekly || plansInCat[0];
+            const virtualPlan: any = {
+                ...primary,
+                id: `group_${cat}`,
+                name: CATEGORY_DISPLAY_NAMES[cat] || primary.name,
+                requires_frequency_selection: true,
+                available_frequencies: Object.keys(frequencyPlanMap),
+                frequency_prices: Object.fromEntries(
+                    Object.entries(frequencyPlanMap).map(([k, p]) => [k, (p as TherapySessionPlan).price])
+                ),
+                features: primary.features,
+                display_price: undefined,
+                display_billing: undefined,
+            };
+            groups.push({ card: virtualPlan, frequencyPlanMap });
+        } else {
+            groups.push({ card: plansInCat[0] });
+        }
+    });
+    return groups;
+};
 
 // Which addons a given plan is allowed to offer (matches available_for_plans against
 // the plan id, its category, or the wildcard 'all')
@@ -213,15 +273,7 @@ const SubscriptionSelector = ({
         coaching: 'Coaching',
         therapy_couples: 'Couples Therapy',
     };
-
-    // Plans whose extra config (frequency / session type) happens on a dedicated
-    // next step. Everything else (e.g. Basic) shows its add-ons right here, inline.
-    const roomsAddonForSelected = selectedPlan
-        ? filterAddonsForPlan(availableAddons, selectedPlan).find(isRoomsAddon)
-        : null;
-    const roomsSelectedInline = !!roomsAddonForSelected && selectedAddons.includes(roomsAddonForSelected.id);
-    const roomsValidInline = !roomsSelectedInline || (plusConfig?.room_categories?.length > 0);
-    const canContinue = !!selectedPlan && (selectedPlan.requires_frequency_selection || roomsValidInline);
+    const canContinue = !!selectedPlan;
 
     return (
         <div className="relative min-h-screen">
@@ -245,45 +297,50 @@ const SubscriptionSelector = ({
                 </div>
 
                 {Object.keys(groupedPlans).length > 0 ? (
-                    Object.entries(groupedPlans).map(([category, categoryPlans]) => (
-                        <div key={category} className="mb-6">
-                            <div className="flex items-center gap-2 mb-3">
-                                <span className="text-xs font-semibold uppercase tracking-wider text-gray-400 bg-gray-100 px-3 py-1 rounded-full">
-                                    {categoryLabels[category] || category}
-                                </span>
+                    Object.entries(groupedPlans).map(([category, categoryPlans]) => {
+                        const displayGroups = buildDisplayGroups(categoryPlans);
+                        return (
+                            <div key={category} className="mb-6">
+                                <div className="flex items-center gap-2 mb-3">
+                                    <span className="text-xs font-semibold uppercase tracking-wider text-gray-400 bg-gray-100 px-3 py-1 rounded-full">
+                                        {categoryLabels[category] || category}
+                                    </span>
+                                </div>
+                                <div className="space-y-3">
+                                    {displayGroups.map(({ card, frequencyPlanMap }) => (
+                                        <PlanCard
+                                            key={card.id}
+                                            plan={card}
+                                            expanded={expandedPlanId === card.id}
+                                            onClick={() => {
+                                                onExpand(card.id);
+                                                if (!frequencyPlanMap) onPlanSelected({ ...card, requires_frequency_selection: true });
+                                            }}
+                                            plusConfig={plusConfig}
+                                            onConfigChange={onConfigChange}
+                                            frequencyPlanMap={frequencyPlanMap}
+                                            onSelectFrequencyPlan={onPlanSelected}
+                                        />
+                                    ))}
+                                </div>
                             </div>
-                            <div className="space-y-3">
-                                {categoryPlans.map((plan: TherapySessionPlan) => (
-                                    <PlanCard
-                                        key={plan.id}
-                                        plan={plan}
-                                        expanded={expandedPlanId === plan.id}
-                                        onClick={() => { onExpand(plan.id); onPlanSelected(plan); }}
-                                        showInlineAddons={!plan.requires_frequency_selection}
-                                        availableAddons={filterAddonsForPlan(availableAddons, plan)}
-                                        selectedAddons={selectedAddons}
-                                        onToggleAddon={onToggleAddon}
-                                        plusConfig={plusConfig}
-                                        onConfigChange={onConfigChange}
-                                    />
-                                ))}
-                            </div>
-                        </div>
-                    ))
+                        );
+                    })
                 ) : (
                     <div className="space-y-4">
-                        {plans.map((plan: TherapySessionPlan) => (
+                        {buildDisplayGroups(plans).map(({ card, frequencyPlanMap }) => (
                             <PlanCard
-                                key={plan.id}
-                                plan={plan}
-                                expanded={expandedPlanId === plan.id}
-                                onClick={() => { onExpand(plan.id); onPlanSelected(plan); }}
-                                showInlineAddons={!plan.requires_frequency_selection}
-                                availableAddons={filterAddonsForPlan(availableAddons, plan)}
-                                selectedAddons={selectedAddons}
-                                onToggleAddon={onToggleAddon}
+                                key={card.id}
+                                plan={card}
+                                expanded={expandedPlanId === card.id}
+                                onClick={() => {
+                                    onExpand(card.id);
+                                    if (!frequencyPlanMap) onPlanSelected({ ...card, requires_frequency_selection: true });
+                                }}
                                 plusConfig={plusConfig}
                                 onConfigChange={onConfigChange}
+                                frequencyPlanMap={frequencyPlanMap}
+                                onSelectFrequencyPlan={onPlanSelected}
                             />
                         ))}
                     </div>
@@ -307,15 +364,29 @@ const SubscriptionSelector = ({
 
 const PlanCard = ({
     plan, expanded, onClick,
-    showInlineAddons, availableAddons, selectedAddons, onToggleAddon, plusConfig, onConfigChange,
+    plusConfig, onConfigChange,
+    frequencyPlanMap, onSelectFrequencyPlan,
 }: {
     plan: TherapySessionPlan; expanded: boolean; onClick: () => void;
-    showInlineAddons?: boolean; availableAddons?: AddonConfig[]; selectedAddons?: string[];
-    onToggleAddon?: (id: string) => void; plusConfig?: any; onConfigChange?: (c: any) => void;
+    plusConfig?: any; onConfigChange?: (c: any) => void;
+    frequencyPlanMap?: Partial<Record<SessionFrequency, TherapySessionPlan>>;
+    onSelectFrequencyPlan?: (plan: TherapySessionPlan) => void;
 }) => {
     const bgColor = expanded ? 'bg-[#92C7CF]' : 'bg-[#F7F7F7]';
     const textColor = expanded ? 'text-white' : 'text-black';
     const nameColor = expanded ? 'text-white' : 'text-[#92C7CF]';
+
+    const availableFreqs: SessionFrequency[] = (plan as any).available_frequencies || [];
+    const freqOptions = FREQUENCIES.filter(f => availableFreqs.includes(f.value));
+    const isFrequencyCard = plan.requires_frequency_selection && freqOptions.length > 0;
+
+    const handleFrequencyPick = (freqValue: SessionFrequency) => {
+        onConfigChange!({ ...plusConfig, frequency: freqValue });
+        const realPlan = frequencyPlanMap?.[freqValue];
+        if (realPlan && onSelectFrequencyPlan) {
+            onSelectFrequencyPlan({ ...realPlan, requires_frequency_selection: true });
+        }
+    };
 
     return (
         <div>
@@ -336,9 +407,15 @@ const PlanCard = ({
                                 </Badge>
                             )}
                         </div>
-                        <p className="text-2xl font-extrabold">{plan.display_price}</p>
-                        {plan.display_billing && (
-                            <p className={`text-xs mt-0.5 ${expanded ? 'text-white/70' : 'text-gray-500'}`}>{plan.display_billing}</p>
+                        {isFrequencyCard ? (
+                            <p className={`text-sm mt-0.5 ${expanded ? 'text-white/90' : 'text-black'}`}>Choose your frequency</p>
+                        ) : (
+                            <>
+                                <p className="text-2xl font-extrabold">{plan.display_price}</p>
+                                {plan.display_billing && (
+                                    <p className={`text-xs mt-0.5 ${expanded ? 'text-white/70' : 'text-gray-500'}`}>{plan.display_billing}</p>
+                                )}
+                            </>
                         )}
                     </div>
                     <ChevronDown className={`w-6 h-6 transition-transform ${expanded ? 'rotate-180' : ''}`} />
@@ -347,41 +424,49 @@ const PlanCard = ({
 
             {expanded && (
                 <div className="bg-white border border-[#92C7CF] rounded-b-3xl p-6 space-y-3">
+                    {isFrequencyCard && (
+                        <div className="pb-3 mb-1 border-b border-gray-100" onClick={(e) => e.stopPropagation()}>
+                            <p className="text-sm font-semibold text-gray-500 mb-3">Choose frequency</p>
+                            <div className="space-y-3">
+                                {freqOptions.map(freq => {
+                                    const freqPrice = (plan as any).frequency_prices?.[freq.value];
+                                    const isSelected = plusConfig?.frequency === freq.value;
+                                    return (
+                                        <div
+                                            key={freq.value}
+                                            onClick={() => handleFrequencyPick(freq.value)}
+                                            className="flex items-center justify-between cursor-pointer"
+                                        >
+                                            <div className="flex items-center gap-3">
+                                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${isSelected ? 'border-[#92C7CF]' : 'border-gray-300'}`}>
+                                                    {isSelected && <div className="w-2.5 h-2.5 rounded-full bg-[#92C7CF]" />}
+                                                </div>
+                                                <span className="text-gray-800">{freq.label}</span>
+                                            </div>
+                                            {typeof freqPrice === 'number' && (
+                                                <span className="text-[#92C7CF] font-semibold">
+                                                    €{freqPrice.toFixed(2)}/{freq.value === 'weekly' ? 'week' : 'month'}
+                                                </span>
+                                            )}
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    )}
+
                     {plan.features.map((feature, index) => (
                         <div key={index} className="flex items-start gap-2">
                             <Check className="w-5 h-5 text-[#92C7CF] flex-shrink-0 mt-0.5" />
                             <span className="text-gray-700">{feature}</span>
                         </div>
                     ))}
-                    {plan.requires_frequency_selection && (
-                        <div className="mt-4 pt-3 border-t border-gray-100">
-                            <p className="text-xs text-gray-400 flex items-center gap-1">
-                                <AlertCircle className="w-3 h-3" />
-                                You'll select session frequency in the next step
-                            </p>
-                        </div>
-                    )}
-
-                    {/* Basic-style plans: pick add-ons right here, no extra step */}
-                    {showInlineAddons && availableAddons && availableAddons.length > 0 && (
-                        <div className="pt-4 mt-1 border-t border-gray-100" onClick={(e) => e.stopPropagation()}>
-                            <AddonsPicker
-                                availableAddons={availableAddons}
-                                selectedAddons={selectedAddons || []}
-                                onToggleAddon={onToggleAddon!}
-                                plusConfig={plusConfig}
-                                onConfigChange={onConfigChange!}
-                            />
-                        </div>
-                    )}
                 </div>
             )}
         </div>
     );
 };
 
-// Shared add-ons list + Rooms category picker, used both inline (Basic-style plans)
-// and inside the Plus configuration step.
 const AddonsPicker = ({ availableAddons, selectedAddons, onToggleAddon, plusConfig, onConfigChange }: {
     availableAddons: AddonConfig[]; selectedAddons: string[]; onToggleAddon: (id: string) => void;
     plusConfig: any; onConfigChange: (c: any) => void;
@@ -433,8 +518,6 @@ const AddonsPicker = ({ availableAddons, selectedAddons, onToggleAddon, plusConf
                                     </div>
                                 </div>
                             </Card>
-
-                            {/* Rooms addon: multi-select community-space categories */}
                             {isRooms && isSelected && (
                                 <div className="border border-t-0 border-[#92C7CF] rounded-b-xl p-4 bg-white space-y-3">
                                     <p className="text-sm text-gray-500">Choose one or more rooms:</p>
@@ -473,26 +556,16 @@ const AddonsPicker = ({ availableAddons, selectedAddons, onToggleAddon, plusConf
 
 const PlusConfigStep = ({ selectedPlan, plusConfig, onConfigChange, onContinue, onBack, availableAddons, selectedAddons, onToggleAddon }: any) => {
     const { t } = useTranslation();
-
-    const frequencies: { value: SessionFrequency; label: string; sublabel: string }[] = [
-        { value: 'weekly', label: 'Once per week', sublabel: 'Most recommended' },
-        { value: 'bimonthly', label: 'Twice per month', sublabel: 'Good balance' },
-        { value: 'monthly', label: 'Once per month', sublabel: 'Flexible option' },
-    ];
-
     const sessionTypes: { value: SessionType; label: string; icon: any }[] = [
         { value: 'individual', label: 'Individual', icon: User },
         { value: 'couple', label: 'Couple', icon: Users },
     ];
 
-    const availableFreqs: SessionFrequency[] = selectedPlan?.available_frequencies || [];
     const availableTypes: SessionType[] = selectedPlan?.available_session_types || [];
-
-    const freqOptions = frequencies.filter(f => availableFreqs.includes(f.value));
     const typeOptions = sessionTypes.filter(s => availableTypes.includes(s.value));
-
-    const showFrequency = selectedPlan?.requires_frequency_selection && freqOptions.length > 0;
     const showSessionType = selectedPlan?.requires_frequency_selection && typeOptions.length > 0;
+
+    const selectedFrequencyLabel = FREQUENCIES.find(f => f.value === plusConfig?.frequency)?.label;
 
     const roomsAddon = (availableAddons as AddonConfig[]).find(isRoomsAddon);
     const roomsSelected = !!roomsAddon && selectedAddons.includes(roomsAddon.id);
@@ -500,7 +573,6 @@ const PlusConfigStep = ({ selectedPlan, plusConfig, onConfigChange, onContinue, 
     const roomsValid = !roomsSelected || selectedRoomCategories.length > 0;
 
     const canContinue =
-        (!showFrequency || plusConfig?.frequency) &&
         (!showSessionType || plusConfig?.session_type) &&
         roomsValid;
 
@@ -513,46 +585,12 @@ const PlusConfigStep = ({ selectedPlan, plusConfig, onConfigChange, onContinue, 
                     </Button>
                     <div>
                         <h1 className="text-2xl font-bold">Configure Your Plan</h1>
-                        <p className="text-sm text-gray-500">{selectedPlan?.name}</p>
+                        <p className="text-sm text-gray-500">
+                            {selectedPlan?.name}
+                            {selectedFrequencyLabel ? ` · ${selectedFrequencyLabel}` : ''}
+                        </p>
                     </div>
                 </div>
-
-                {showFrequency && (
-                    <div className="mb-8">
-                        <h2 className="text-lg font-semibold mb-4">Session Frequency</h2>
-                        <div className="space-y-3">
-                            {freqOptions.map(freq => {
-                                const freqPrice = selectedPlan?.frequency_prices?.[freq.value];
-                                return (
-                                    <Card
-                                        key={freq.value}
-                                        onClick={() => onConfigChange({ ...plusConfig, frequency: freq.value })}
-                                        className={`p-4 cursor-pointer transition-all ${plusConfig?.frequency === freq.value
-                                            ? 'border-2 border-[#92C7CF] bg-[#eef7f8]'
-                                            : 'border hover:border-[#92C7CF]/50'}`}
-                                    >
-                                        <div className="flex items-center justify-between">
-                                            <div>
-                                                <p className="font-medium">{freq.label}</p>
-                                                <p className="text-sm text-gray-500">{freq.sublabel}</p>
-                                            </div>
-                                            <div className="flex items-center gap-3">
-                                                {typeof freqPrice === 'number' && (
-                                                    <span className="text-sm font-semibold text-[#92C7CF]">€{freqPrice.toFixed(2)}/wk</span>
-                                                )}
-                                                {plusConfig?.frequency === freq.value && (
-                                                    <div className="w-6 h-6 rounded-full bg-[#92C7CF] flex items-center justify-center">
-                                                        <Check className="w-4 h-4 text-white" />
-                                                    </div>
-                                                )}
-                                            </div>
-                                        </div>
-                                    </Card>
-                                );
-                            })}
-                        </div>
-                    </div>
-                )}
 
                 {showSessionType && (
                     <div className="mb-8">
