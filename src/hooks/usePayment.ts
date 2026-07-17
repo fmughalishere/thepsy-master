@@ -17,7 +17,7 @@ import { getLocalhostFirebaseTarget, isDevelLocalhost } from '@/lib/firebase-loc
 
 export enum PaymentStep {
     Subscription = 'subscription',
-    PlusConfig = 'plus_config',       // NEW: frequency + session type selection
+    PlusConfig = 'plus_config',
     PaymentMethod = 'payment_method',
     Summary = 'summary',
     Processing = 'processing',
@@ -46,7 +46,6 @@ export interface PaymentState {
     // Addons
     availableAddons: AddonConfig[];
     selectedAddons: string[];
-    // Live price overrides from Admin > Pricing panel (Firestore), merged on top of Remote Config
     priceOverrides: { plans: PlanPriceOverrideMap; addons: AddonPriceOverrideMap };
 }
 
@@ -79,7 +78,7 @@ export const usePayment = () => {
         priceOverrides: { plans: {}, addons: {} },
     });
 
-    const { i18n } = useTranslation();
+    const { t, i18n } = useTranslation();
 
     const fetchPaymentConfig = async (): Promise<TherapySessionConfig | null> => {
         try {
@@ -129,6 +128,11 @@ export const usePayment = () => {
             const selectedPlans = getPlans(lang) || getPlans('en') || [];
             const selectedMethods = getMethods(lang) || getMethods('en') || [];
             const addons: AddonConfig[] = config.addons || [];
+            const localizedAddons = addons.map(a => ({
+                ...a,
+                name: t(`payment.addon_catalog.${a.id}.name`, a.name),
+                description: t(`payment.addon_catalog.${a.id}.description`, a.description),
+            }));
 
             setState(prev => ({
                 ...prev,
@@ -137,7 +141,7 @@ export const usePayment = () => {
                 isLoading: false,
                 config: config,
                 packages: packagesConfig,
-                availableAddons: addons.map(a => mergeAddonWithPriceOverride(a, prev.priceOverrides.addons[a.id])),
+                availableAddons: localizedAddons.map(a => mergeAddonWithPriceOverride(a, prev.priceOverrides.addons[a.id])),
             }));
 
             return config;
@@ -155,10 +159,6 @@ export const usePayment = () => {
     useEffect(() => {
         fetchPaymentConfig();
     }, [i18n.language]);
-
-    // Live-merge admin-configured prices (Admin > Pricing panel) on top of whatever
-    // Remote Config returned, so price changes reflect instantly without needing
-    // a Remote Config republish or app refresh.
     useEffect(() => {
         const unsubPlans = onSnapshot(PRICING_PLANS_DOC, (snap) => {
             const overrides = (snap.data() as any) || {};
@@ -194,6 +194,17 @@ export const usePayment = () => {
         }));
     };
 
+    const selectFrequencyPlan = (plan: TherapySessionPlan, groupId: string, frequency: SessionFrequency) => {
+        setState(prev => ({
+            ...prev,
+            selectedPlan: plan,
+            expandedPlanId: groupId,
+            plusConfig: { ...(prev.plusConfig || {}), frequency } as PlusConfigSelection,
+            couponResult: null,
+            couponCode: '',
+        }));
+    };
+
     const selectPaymentMethod = (method: any) => {
         setState(prev => ({ ...prev, selectedPaymentMethod: method }));
     };
@@ -205,12 +216,10 @@ export const usePayment = () => {
         }));
     };
 
-    // Set Plus plan config (frequency + session type)
     const setPlusConfig = (config: PlusConfigSelection) => {
         setState(prev => ({ ...prev, plusConfig: config }));
     };
 
-    // Toggle addon selection
     const toggleAddon = (addonId: string) => {
         setState(prev => ({
             ...prev,
@@ -220,13 +229,11 @@ export const usePayment = () => {
         }));
     };
 
-    // Proceed from plan selection
     const proceedFromPlanSelection = () => {
         if (!state.selectedPlan) {
             setState(prev => ({ ...prev, error: 'Please select a plan' }));
             return;
         }
-        // If plan requires config (Plus plan)
         if (state.selectedPlan.requires_frequency_selection || state.selectedPlan.requires_session_type_selection) {
             setState(prev => ({ ...prev, currentStep: PaymentStep.PlusConfig, error: null }));
         } else {
@@ -234,7 +241,6 @@ export const usePayment = () => {
         }
     };
 
-    // Proceed from Plus config
     const proceedFromPlusConfig = () => {
         if (!state.plusConfig) {
             setState(prev => ({ ...prev, error: 'Please select frequency and session type' }));
@@ -255,7 +261,6 @@ export const usePayment = () => {
         setState(prev => ({ ...prev, currentStep: PaymentStep.Summary, error: null }));
     };
 
-    // Coupon validation
     const setCouponCode = (code: string) => {
         setState(prev => ({ ...prev, couponCode: code, couponResult: null }));
     };
@@ -273,8 +278,6 @@ export const usePayment = () => {
             const code = state.couponCode.trim().toUpperCase();
             const userId = auth.currentUser?.uid;
             const userEmail = auth.currentUser?.email?.trim().toLowerCase();
-
-            // Fetch coupon from Firestore
             const couponsRef = collection(db, 'coupons');
             const q = query(couponsRef, where('code', '==', code), where('status', '==', 'active'));
             const snap = await getDocs(q);
@@ -290,10 +293,6 @@ export const usePayment = () => {
 
             const couponDoc = snap.docs[0];
             const coupon = { id: couponDoc.id, ...couponDoc.data() } as Coupon;
-
-            // Single-customer coupon check — only the assigned email may redeem it.
-            // Deliberately uses the same "invalid" message as a non-existent code so
-            // other users can't tell the coupon exists and is just locked to someone else.
             if (coupon.restricted_to_email) {
                 const assignedEmail = coupon.restricted_to_email.trim().toLowerCase();
                 if (!userEmail || userEmail !== assignedEmail) {
@@ -310,7 +309,6 @@ export const usePayment = () => {
             const startDate = new Date(coupon.start_date);
             const expiryDate = new Date(coupon.expiry_date);
 
-            // Date checks
             if (now < startDate) {
                 setState(prev => ({ ...prev, isCouponLoading: false, couponResult: { valid: false, error: 'Coupon is not yet active.' } }));
                 return;
@@ -320,7 +318,6 @@ export const usePayment = () => {
                 return;
             }
 
-            // Usage limit check
             if (!coupon.unlimited_usage && coupon.max_redemptions != null) {
                 const totalUsed = coupon.total_redemptions || 0;
                 if (totalUsed >= coupon.max_redemptions) {
@@ -329,7 +326,6 @@ export const usePayment = () => {
                 }
             }
 
-            // Plan eligibility check
             if (coupon.applicable_plans !== 'all' && Array.isArray(coupon.applicable_plans)) {
                 if (!coupon.applicable_plans.includes(state.selectedPlan.id)) {
                     setState(prev => ({ ...prev, isCouponLoading: false, couponResult: { valid: false, error: 'Coupon code is not valid for this package.' } }));
@@ -337,7 +333,6 @@ export const usePayment = () => {
                 }
             }
 
-            // Per-customer check
             if (userId && (coupon.one_time_per_customer || (coupon.max_per_customer && coupon.max_per_customer > 0))) {
                 const redemptionsRef = collection(db, 'coupon_redemptions');
                 const userQ = query(redemptionsRef, where('coupon_id', '==', coupon.id), where('user_id', '==', userId));
@@ -354,14 +349,12 @@ export const usePayment = () => {
                 }
             }
 
-            // Min order check (based on the plan's base price, before add-ons)
             const planPrice = getBasePrice();
             if (coupon.min_order_value && planPrice < coupon.min_order_value) {
                 setState(prev => ({ ...prev, isCouponLoading: false, couponResult: { valid: false, error: `Minimum order value of €${coupon.min_order_value} required.` } }));
                 return;
             }
 
-            // Calculate discount
             let discountAmount = 0;
             if (coupon.discount_type === 'percentage') {
                 discountAmount = (planPrice * coupon.discount_value) / 100;
@@ -394,9 +387,6 @@ export const usePayment = () => {
         setState(prev => ({ ...prev, couponCode: '', couponResult: null }));
     };
 
-    // Base plan price: uses the frequency-specific price when the selected plan has
-    // frequency-based pricing (e.g. Plus/Coaching) and a frequency has been chosen,
-    // otherwise falls back to the plan's flat price.
     const getBasePrice = (): number => {
         const plan = state.selectedPlan;
         if (!plan) return 0;
@@ -425,7 +415,6 @@ export const usePayment = () => {
         return subtotal;
     };
 
-    // Process payment
     const initiatePayment = async () => {
         const plan = state.selectedPlan;
         const method = state.selectedPaymentMethod;
@@ -725,6 +714,7 @@ export const usePayment = () => {
     return {
         state,
         selectPlan,
+        selectFrequencyPlan,
         selectPaymentMethod,
         togglePlanExpansion,
         setPlusConfig,

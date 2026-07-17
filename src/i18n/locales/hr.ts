@@ -613,10 +613,28 @@ export const hr = {
         "payment": {
             "subscription": { "title": "Odaberite Plan", "subtitle": "Odaberite pretplatu koja najbolje odgovara vašim potrebama.", "already_paid_disclaimer": "Ako ponovno vidite ovaj prozor za plaćanje, a već ste platili, kontaktirajte nas na info@thepsy.de", "continue": "Nastavi na plaćanje" },
             "method": { "title": "Način Plaćanja", "subtitle": "Odaberite način plaćanja.", "continue": "Nastavi" },
-            "summary": { "title": "Sažetak Naplate", "method_label": "Način plaćanja", "overview_label": "Pregled plana", "total_amount": "Ukupni Iznos", "total_monthly": "Ukupno mjesečno", "confirm": "Potvrdi i Plati", "processing": "Obrada plaćanja...", "subtotal_weekly": "Međuzbroj (tjedno)", "price": "Cijena" },
+            "summary": { "title": "Sažetak Naplate", "method_label": "Način plaćanja", "overview_label": "Pregled plana", "total_amount": "Ukupni Iznos", "total_monthly": "Ukupno mjesečno", "confirm": "Potvrdi i Plati", "processing": "Obrada plaćanja...", "subtotal_weekly": "Međuzbroj (tjedno)", "price": "Cijena", "subtotal": "Međuzbroj", "addons_label": "Dodaci", "discount_label": "Popust", "total": "Ukupno", "billed_note": "Naplaćuje se tjedno · Otkažite bilo kada", "pay_button": "Plati" },
             "success": { "title": "Plaćanje uspješno!", "message": "Vaša pretplata je uspješno aktivirana.", "continue": "Nastavi" },
             "errors": { "failed_logout": "Odjava nije uspjela", "join_call_time": "Možete se pridružiti pozivu samo 15 minuta ranije." },
-            "processing_overlay": { "desc": "Završite plaćanje u novom prozoru.", "popup_failed": "Ako se prozor za plaćanje nije automatski otvorio:", "click_here": "Kliknite ovdje za plaćanje" }
+            "processing_overlay": { "desc": "Završite plaćanje u novom prozoru.", "popup_failed": "Ako se prozor za plaćanje nije automatski otvorio:", "click_here": "Kliknite ovdje za plaćanje" },
+            "categories": { "basic": "Osnovni", "plus": "Plus", "coaching": "Coaching", "therapy_couples": "Terapija za Parove", "plus_plan": "Plus Plan" },
+            "plan": { "popular": "Popularno", "min_suffix": "min", "choose_your_frequency": "Odaberite učestalost", "choose_frequency": "Odaberite učestalost", "per_week": "tjedno", "per_month": "mjesečno", "freq_weekly_label": "1x tjedno", "freq_weekly_sub": "Najpreporučenije", "freq_bimonthly_label": "2x mjesečno", "freq_bimonthly_sub": "Dobra ravnoteža", "freq_monthly_label": "1x mjesečno", "freq_monthly_sub": "Fleksibilna opcija" },
+            "addons": { "title": "Dodaci", "subtitle": "Opcionalni dodaci, kupuju se zasebno", "choose_rooms": "Odaberite jednu ili više soba:", "select_room_warning": "Odaberite barem jednu sobu za nastavak", "selected_title": "Odabrani Dodaci" },
+            "config": { "title": "Konfigurirajte Svoj Plan", "session_type": "Vrsta Sesije", "individual": "Individualno", "couple": "Par", "continue": "Nastavi na plaćanje" },
+            "coupon": { "have_code": "Imate kod za popust?", "placeholder": "Unesite kod za popust", "apply": "Primijeni", "discount_applied": "popust primijenjen" },
+            "frequency_label": { "weekly": "Jednom tjedno", "bimonthly": "Dvaput mjesečno", "monthly": "Jednom mjesečno", "session_suffix": "Sesija" },
+            "mock_dev": "Testno plaćanje (samo razvoj)",
+            "addon_catalog": {
+                "hypnosis": { "name": "Sesija hipnoze", "description": "Vođena sesija hipnoterapije" },
+                "additional_sessions": { "name": "Dodatne sesije", "description": "Dodatne terapijske sesije" },
+                "emdr": { "name": "EMDR sesija", "description": "Desenzibilizacija i preradba pokretima očiju" },
+                "rooms": { "name": "Sobe (zajedničke prostorije)", "description": "Pristup prostorima zajedničke podrške" },
+                "group_sessions": { "name": "Grupne sesije", "description": "Pridružite se grupnim terapijskim sesijama" },
+                "diagnostics_autism": { "name": "Dijagnostika — Autizam", "description": "Profesionalna dijagnostička procjena autizma" },
+                "diagnostics_adhd": { "name": "Dijagnostika — ADHD", "description": "Profesionalna dijagnostička procjena ADHD-a" },
+                "diagnostics_depression": { "name": "Dijagnostika — Depresija", "description": "Profesionalna dijagnostička procjena depresije" },
+                "reports": { "name": "Izvještaji (Nalazi)", "description": "Detaljni izvještaji o napretku terapije" }
+            }
         },
         "profile": {
             "specialization_items": { "ANXIETY": "Anksioznost", "DEPRESSION": "Depresija", "RELATIONSHIPS": "Veze", "STRESS": "Stres", "TRAUMA": "Trauma", "ADDICTION": "Ovisnost", "FAMILY": "Obitelj", "LBGTQ": "LGBTQ+", "EATING_DISORDERS": "Poremećaji prehrane", "OTHER": "Ostalo" },

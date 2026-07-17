@@ -617,10 +617,28 @@ export const el = {
         "payment": {
             "subscription": { "title": "Επιλέξτε Πρόγραμμα", "subtitle": "Επιλέξτε τη συνδρομή που ταιριάζει καλύτερα στις ανάγκες σας.", "already_paid_disclaimer": "Αν βλέπετε ξανά αυτή την οθόνη πληρωμής και έχετε ήδη πληρώσει, επικοινωνήστε μαζί μας στο info@thepsy.de", "continue": "Συνέχεια στην πληρωμή" },
             "method": { "title": "Μέθοδος Πληρωμής", "subtitle": "Επιλέξτε πώς θέλετε να πληρώσετε.", "continue": "Συνέχεια" },
-            "summary": { "title": "Σύνοψη Χρέωσης", "method_label": "Μέθοδος πληρωμής", "overview_label": "Σύνοψη προγράμματος", "total_amount": "Συνολικό Ποσό", "total_monthly": "Σύνολο μηνιαίως", "confirm": "Επιβεβαίωση και Πληρωμή", "processing": "Επεξεργασία πληρωμής...", "subtotal_weekly": "Μερικό σύνολο (εβδομαδιαία)", "price": "Τιμή" },
+            "summary": { "title": "Σύνοψη Χρέωσης", "method_label": "Μέθοδος πληρωμής", "overview_label": "Σύνοψη προγράμματος", "total_amount": "Συνολικό Ποσό", "total_monthly": "Σύνολο μηνιαίως", "confirm": "Επιβεβαίωση και Πληρωμή", "processing": "Επεξεργασία πληρωμής...", "subtotal_weekly": "Μερικό σύνολο (εβδομαδιαία)", "price": "Τιμή", "subtotal": "Μερικό σύνολο", "addons_label": "Πρόσθετα", "discount_label": "Έκπτωση", "total": "Σύνολο", "billed_note": "Χρέωση εβδομαδιαίως · Ακύρωση ανά πάσα στιγμή", "pay_button": "Πληρωμή" },
             "success": { "title": "Η πληρωμή ολοκληρώθηκε!", "message": "Η συνδρομή σας ενεργοποιήθηκε με επιτυχία.", "continue": "Συνέχεια" },
             "errors": { "failed_logout": "Αποτυχία αποσύνδεσης", "join_call_time": "Μπορείτε να συμμετάσχετε στην κλήση μόνο 15 λεπτά πριν." },
-            "processing_overlay": { "desc": "Παρακαλώ ολοκληρώστε την πληρωμή στο νέο παράθυρο.", "popup_failed": "Αν το παράθυρο πληρωμής δεν άνοιξε αυτόματα:", "click_here": "Κάντε κλικ εδώ για πληρωμή" }
+            "processing_overlay": { "desc": "Παρακαλώ ολοκληρώστε την πληρωμή στο νέο παράθυρο.", "popup_failed": "Αν το παράθυρο πληρωμής δεν άνοιξε αυτόματα:", "click_here": "Κάντε κλικ εδώ για πληρωμή" },
+            "categories": { "basic": "Βασικό", "plus": "Plus", "coaching": "Coaching", "therapy_couples": "Θεραπεία Ζευγαριών", "plus_plan": "Πλάνο Plus" },
+            "plan": { "popular": "Δημοφιλές", "min_suffix": "λεπτά", "choose_your_frequency": "Επιλέξτε τη συχνότητά σας", "choose_frequency": "Επιλέξτε συχνότητα", "per_week": "εβδομάδα", "per_month": "μήνα", "freq_weekly_label": "1x την εβδομάδα", "freq_weekly_sub": "Συνιστάται περισσότερο", "freq_bimonthly_label": "2x τον μήνα", "freq_bimonthly_sub": "Καλή ισορροπία", "freq_monthly_label": "1x τον μήνα", "freq_monthly_sub": "Ευέλικτη επιλογή" },
+            "addons": { "title": "Πρόσθετα", "subtitle": "Προαιρετικά πρόσθετα, αγοράζονται ξεχωριστά", "choose_rooms": "Επιλέξτε ένα ή περισσότερα δωμάτια:", "select_room_warning": "Επιλέξτε τουλάχιστον ένα δωμάτιο για να συνεχίσετε", "selected_title": "Επιλεγμένα Πρόσθετα" },
+            "config": { "title": "Διαμορφώστε το Πρόγραμμά σας", "session_type": "Τύπος Συνεδρίας", "individual": "Ατομικό", "couple": "Ζευγάρι", "continue": "Συνέχεια στην πληρωμή" },
+            "coupon": { "have_code": "Έχετε κωδικό κουπονιού;", "placeholder": "Εισαγάγετε κωδικό κουπονιού", "apply": "Εφαρμογή", "discount_applied": "έκπτωση εφαρμόστηκε" },
+            "frequency_label": { "weekly": "Μία φορά την εβδομάδα", "bimonthly": "Δύο φορές τον μήνα", "monthly": "Μία φορά τον μήνα", "session_suffix": "Συνεδρία" },
+            "mock_dev": "Δοκιμαστική πληρωμή (μόνο ανάπτυξη)",
+            "addon_catalog": {
+                "hypnosis": { "name": "Συνεδρία Ύπνωσης", "description": "Καθοδηγούμενη συνεδρία υπνοθεραπείας" },
+                "additional_sessions": { "name": "Επιπλέον Συνεδρίες", "description": "Επιπλέον συνεδρίες θεραπείας" },
+                "emdr": { "name": "Συνεδρία EMDR", "description": "Απευαισθητοποίηση και Επανεπεξεργασία μέσω Κίνησης των Ματιών" },
+                "rooms": { "name": "Δωμάτια (Κοινοτικοί Χώροι)", "description": "Πρόσβαση σε κοινοτικούς χώρους υποστήριξης" },
+                "group_sessions": { "name": "Ομαδικές Συνεδρίες", "description": "Συμμετοχή σε ομαδικές συνεδρίες θεραπείας" },
+                "diagnostics_autism": { "name": "Διαγνωστικά — Αυτισμός", "description": "Επαγγελματική διαγνωστική αξιολόγηση αυτισμού" },
+                "diagnostics_adhd": { "name": "Διαγνωστικά — ΔΕΠΥ", "description": "Επαγγελματική διαγνωστική αξιολόγηση ΔΕΠΥ" },
+                "diagnostics_depression": { "name": "Διαγνωστικά — Κατάθλιψη", "description": "Επαγγελματική διαγνωστική αξιολόγηση κατάθλιψης" },
+                "reports": { "name": "Αναφορές (Ευρήματα)", "description": "Λεπτομερείς αναφορές προόδου θεραπείας" }
+            }
         },
         "profile": {
             "specialization_items": { "ANXIETY": "Άγχος", "DEPRESSION": "Κατάθλιψη", "RELATIONSHIPS": "Σχέσεις", "STRESS": "Στρες", "TRAUMA": "Τραύμα", "ADDICTION": "Εθισμός", "FAMILY": "Οικογένεια", "LBGTQ": "LGBTQ+", "EATING_DISORDERS": "Διατροφικές Διαταραχές", "OTHER": "Άλλο" },

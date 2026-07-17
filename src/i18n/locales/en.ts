@@ -788,7 +788,13 @@ export const en = {
                 "confirm": "Confirm and Pay",
                 "processing": "Processing Payment...",
                 "subtotal_weekly": "Subtotal (Weekly)",
-                "price": "Price"
+                "price": "Price",
+                "subtotal": "Subtotal",
+                "addons_label": "Add-ons",
+                "discount_label": "Discount",
+                "total": "Total",
+                "billed_note": "Billed per week · Cancel anytime",
+                "pay_button": "Pay"
             },
             "success": {
                 "title": "Payment Successful!",
@@ -805,6 +811,65 @@ export const en = {
                 "desc": "Please complete the payment in the new browser window.",
                 "popup_failed": "If the payment window didn't open automatically:",
                 "click_here": "Click here to pay"
+            },
+            "categories": {
+                "basic": "Basic",
+                "plus": "Plus",
+                "coaching": "Coaching",
+                "therapy_couples": "Couples Therapy",
+                "plus_plan": "Plus Plan"
+            },
+            "plan": {
+                "popular": "Popular",
+                "min_suffix": "min",
+                "choose_your_frequency": "Choose your frequency",
+                "choose_frequency": "Choose frequency",
+                "per_week": "week",
+                "per_month": "month",
+                "freq_weekly_label": "1x per week",
+                "freq_weekly_sub": "Most recommended",
+                "freq_bimonthly_label": "2x per month",
+                "freq_bimonthly_sub": "Good balance",
+                "freq_monthly_label": "1x per month",
+                "freq_monthly_sub": "Flexible option"
+            },
+            "addons": {
+                "title": "Add-ons",
+                "subtitle": "Optional extras, purchased separately",
+                "choose_rooms": "Choose one or more rooms:",
+                "select_room_warning": "Select at least one room to continue",
+                "selected_title": "Selected Add-ons"
+            },
+            "config": {
+                "title": "Configure Your Plan",
+                "session_type": "Session Type",
+                "individual": "Individual",
+                "couple": "Couple",
+                "continue": "Continue to Payment"
+            },
+            "coupon": {
+                "have_code": "Have a coupon code?",
+                "placeholder": "Enter coupon code",
+                "apply": "Apply",
+                "discount_applied": "discount applied"
+            },
+            "frequency_label": {
+                "weekly": "Once per week",
+                "bimonthly": "Twice per month",
+                "monthly": "Once per month",
+                "session_suffix": "Session"
+            },
+            "mock_dev": "Mock Payment (Dev Only)",
+            "addon_catalog": {
+                "hypnosis": { "name": "Hypnosis Session", "description": "Guided hypnotherapy session" },
+                "additional_sessions": { "name": "Additional Sessions", "description": "Extra therapy sessions" },
+                "emdr": { "name": "EMDR Session", "description": "Eye Movement Desensitization and Reprocessing" },
+                "rooms": { "name": "Rooms (Community Spaces)", "description": "Access to community support spaces" },
+                "group_sessions": { "name": "Group Sessions", "description": "Join group therapy sessions" },
+                "diagnostics_autism": { "name": "Diagnostics — Autism", "description": "Professional autism diagnostic assessment" },
+                "diagnostics_adhd": { "name": "Diagnostics — ADHD", "description": "Professional ADHD diagnostic assessment" },
+                "diagnostics_depression": { "name": "Diagnostics — Depression", "description": "Professional depression diagnostic assessment" },
+                "reports": { "name": "Reports (Findings)", "description": "Detailed therapy progress reports" }
             }
         },
         "profile": {

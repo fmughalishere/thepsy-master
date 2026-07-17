@@ -26,10 +26,10 @@ const ROOM_CATEGORIES = [
     'LGBTQ+',
 ];
 
-const FREQUENCIES: { value: SessionFrequency; label: string; sublabel: string }[] = [
-    { value: 'weekly', label: '1x per week', sublabel: 'Most recommended' },
-    { value: 'bimonthly', label: '2x per month', sublabel: 'Good balance' },
-    { value: 'monthly', label: '1x per month', sublabel: 'Flexible option' },
+const getFrequencies = (t: (key: string) => string): { value: SessionFrequency; label: string; sublabel: string }[] => [
+    { value: 'weekly', label: t('payment.plan.freq_weekly_label'), sublabel: t('payment.plan.freq_weekly_sub') },
+    { value: 'bimonthly', label: t('payment.plan.freq_bimonthly_label'), sublabel: t('payment.plan.freq_bimonthly_sub') },
+    { value: 'monthly', label: t('payment.plan.freq_monthly_label'), sublabel: t('payment.plan.freq_monthly_sub') },
 ];
 
 const isRoomsAddon = (addon: AddonConfig) =>
@@ -41,18 +41,18 @@ const getFrequencyKey = (p: TherapySessionPlan): SessionFrequency => {
     return 'monthly';
 };
 
-const CATEGORY_DISPLAY_NAMES: Record<string, string> = {
-    plus: 'Plus Plan',
-    coaching: 'Coaching',
-    therapy_couples: 'Couples Therapy',
-};
+const getCategoryDisplayNames = (t: (key: string) => string): Record<string, string> => ({
+    plus: t('payment.categories.plus_plan'),
+    coaching: t('payment.categories.coaching'),
+    therapy_couples: t('payment.categories.therapy_couples'),
+});
 
 interface DisplayPlanGroup {
     card: TherapySessionPlan;
     frequencyPlanMap?: Partial<Record<SessionFrequency, TherapySessionPlan>>;
 }
 
-const buildDisplayGroups = (categoryPlans: TherapySessionPlan[]): DisplayPlanGroup[] => {
+const buildDisplayGroups = (categoryPlans: TherapySessionPlan[], t: (key: string) => string): DisplayPlanGroup[] => {
     const byCategory: Record<string, TherapySessionPlan[]> = {};
     categoryPlans.forEach(p => {
         const cat = p.plan_category || 'basic';
@@ -60,6 +60,7 @@ const buildDisplayGroups = (categoryPlans: TherapySessionPlan[]): DisplayPlanGro
         byCategory[cat].push(p);
     });
 
+    const categoryDisplayNames = getCategoryDisplayNames(t);
     const groups: DisplayPlanGroup[] = [];
     Object.entries(byCategory).forEach(([cat, plansInCat]) => {
         if (plansInCat.length > 1) {
@@ -71,7 +72,7 @@ const buildDisplayGroups = (categoryPlans: TherapySessionPlan[]): DisplayPlanGro
             const virtualPlan: any = {
                 ...primary,
                 id: `group_${cat}`,
-                name: CATEGORY_DISPLAY_NAMES[cat] || primary.name,
+                name: categoryDisplayNames[cat] || primary.name,
                 requires_frequency_selection: true,
                 available_frequencies: Object.keys(frequencyPlanMap),
                 frequency_prices: Object.fromEntries(
@@ -89,8 +90,6 @@ const buildDisplayGroups = (categoryPlans: TherapySessionPlan[]): DisplayPlanGro
     return groups;
 };
 
-// Which addons a given plan is allowed to offer (matches available_for_plans against
-// the plan id, its category, or the wildcard 'all')
 const filterAddonsForPlan = (addons: AddonConfig[], plan: TherapySessionPlan | null) => {
     if (!plan) return [];
     return addons.filter(a =>
@@ -108,6 +107,7 @@ const Payment = () => {
     const {
         state,
         selectPlan,
+        selectFrequencyPlan,
         selectPaymentMethod,
         togglePlanExpansion,
         setPlusConfig,
@@ -181,6 +181,7 @@ const Payment = () => {
                     onToggleAddon={toggleAddon}
                     plusConfig={state.plusConfig}
                     onConfigChange={setPlusConfig}
+                    onSelectFrequencyPlan={selectFrequencyPlan}
                 />
             )}
 
@@ -247,6 +248,7 @@ const Payment = () => {
 const SubscriptionSelector = ({
     plans, expandedPlanId, selectedPlan, onExpand, onPlanSelected, onContinue,
     availableAddons, selectedAddons, onToggleAddon, plusConfig, onConfigChange,
+    onSelectFrequencyPlan,
 }: any) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
@@ -268,10 +270,10 @@ const SubscriptionSelector = ({
     });
 
     const categoryLabels: Record<string, string> = {
-        basic: 'Basic',
-        plus: 'Plus',
-        coaching: 'Coaching',
-        therapy_couples: 'Couples Therapy',
+        basic: t('payment.categories.basic'),
+        plus: t('payment.categories.plus'),
+        coaching: t('payment.categories.coaching'),
+        therapy_couples: t('payment.categories.therapy_couples'),
     };
     const canContinue = !!selectedPlan;
 
@@ -298,7 +300,7 @@ const SubscriptionSelector = ({
 
                 {Object.keys(groupedPlans).length > 0 ? (
                     Object.entries(groupedPlans).map(([category, categoryPlans]) => {
-                        const displayGroups = buildDisplayGroups(categoryPlans);
+                        const displayGroups = buildDisplayGroups(categoryPlans, t);
                         return (
                             <div key={category} className="mb-6">
                                 <div className="flex items-center gap-2 mb-3">
@@ -319,7 +321,7 @@ const SubscriptionSelector = ({
                                             plusConfig={plusConfig}
                                             onConfigChange={onConfigChange}
                                             frequencyPlanMap={frequencyPlanMap}
-                                            onSelectFrequencyPlan={onPlanSelected}
+                                            onSelectFrequencyPlan={onSelectFrequencyPlan}
                                         />
                                     ))}
                                 </div>
@@ -328,7 +330,7 @@ const SubscriptionSelector = ({
                     })
                 ) : (
                     <div className="space-y-4">
-                        {buildDisplayGroups(plans).map(({ card, frequencyPlanMap }) => (
+                        {buildDisplayGroups(plans, t).map(({ card, frequencyPlanMap }) => (
                             <PlanCard
                                 key={card.id}
                                 plan={card}
@@ -340,7 +342,7 @@ const SubscriptionSelector = ({
                                 plusConfig={plusConfig}
                                 onConfigChange={onConfigChange}
                                 frequencyPlanMap={frequencyPlanMap}
-                                onSelectFrequencyPlan={onPlanSelected}
+                                onSelectFrequencyPlan={onSelectFrequencyPlan}
                             />
                         ))}
                     </div>
@@ -370,21 +372,38 @@ const PlanCard = ({
     plan: TherapySessionPlan; expanded: boolean; onClick: () => void;
     plusConfig?: any; onConfigChange?: (c: any) => void;
     frequencyPlanMap?: Partial<Record<SessionFrequency, TherapySessionPlan>>;
-    onSelectFrequencyPlan?: (plan: TherapySessionPlan) => void;
+    onSelectFrequencyPlan?: (plan: TherapySessionPlan, groupId: string, frequency: SessionFrequency) => void;
 }) => {
+    const { t } = useTranslation();
     const bgColor = expanded ? 'bg-[#92C7CF]' : 'bg-[#F7F7F7]';
     const textColor = expanded ? 'text-white' : 'text-black';
     const nameColor = expanded ? 'text-white' : 'text-[#92C7CF]';
 
     const availableFreqs: SessionFrequency[] = (plan as any).available_frequencies || [];
-    const freqOptions = FREQUENCIES.filter(f => availableFreqs.includes(f.value));
+    const freqOptions = getFrequencies(t).filter(f => availableFreqs.includes(f.value));
     const isFrequencyCard = plan.requires_frequency_selection && freqOptions.length > 0;
 
+    // The group/virtual card's `features` field is frozen to whichever plan was
+    // picked as "primary" when the group was built (usually the weekly plan) -
+    // see buildDisplayGroups(). That means the checklist below would otherwise
+    // always show the weekly plan's features even when the user picks a
+    // different frequency (2x/month, 1x/month, etc). To keep the checklist in
+    // sync with the selected frequency, resolve the features from the actual
+    // per-frequency plan whenever one has been picked, and only fall back to
+    // the group card's own features before any frequency has been chosen yet.
+    const displayFeatures = (isFrequencyCard && plusConfig?.frequency && frequencyPlanMap?.[plusConfig.frequency]?.features)
+        ? frequencyPlanMap[plusConfig.frequency]!.features
+        : plan.features;
+
+    // Selecting a frequency must keep this card expanded (it stays the same
+    // group card, e.g. "group_plus") and must not wipe out the frequency we
+    // just picked - both of those used to happen because this used to call
+    // the generic selectPlan(), which resets expandedPlanId to the *real*
+    // plan's id (different from the group card's id) and resets plusConfig.
     const handleFrequencyPick = (freqValue: SessionFrequency) => {
-        onConfigChange!({ ...plusConfig, frequency: freqValue });
         const realPlan = frequencyPlanMap?.[freqValue];
         if (realPlan && onSelectFrequencyPlan) {
-            onSelectFrequencyPlan({ ...realPlan, requires_frequency_selection: true });
+            onSelectFrequencyPlan({ ...realPlan, requires_frequency_selection: true }, plan.id, freqValue);
         }
     };
 
@@ -399,16 +418,16 @@ const PlanCard = ({
                         <div className="flex items-center gap-2">
                             <p className={`text-sm font-medium ${nameColor}`}>{plan.name}</p>
                             {plan.popular && (
-                                <Badge className="bg-white/20 text-white text-xs">Popular</Badge>
+                                <Badge className="bg-white/20 text-white text-xs">{t('payment.plan.popular')}</Badge>
                             )}
                             {plan.session_duration && (
                                 <Badge className="bg-white/20 text-white text-xs flex items-center gap-1">
-                                    <Clock className="w-3 h-3" />{plan.session_duration} min
+                                    <Clock className="w-3 h-3" />{plan.session_duration} {t('payment.plan.min_suffix')}
                                 </Badge>
                             )}
                         </div>
                         {isFrequencyCard ? (
-                            <p className={`text-sm mt-0.5 ${expanded ? 'text-white/90' : 'text-black'}`}>Choose your frequency</p>
+                            <p className={`text-sm mt-0.5 ${expanded ? 'text-white/90' : 'text-black'}`}>{t('payment.plan.choose_your_frequency')}</p>
                         ) : (
                             <>
                                 <p className="text-2xl font-extrabold">{plan.display_price}</p>
@@ -426,7 +445,7 @@ const PlanCard = ({
                 <div className="bg-white border border-[#92C7CF] rounded-b-3xl p-6 space-y-3">
                     {isFrequencyCard && (
                         <div className="pb-3 mb-1 border-b border-gray-100" onClick={(e) => e.stopPropagation()}>
-                            <p className="text-sm font-semibold text-gray-500 mb-3">Choose frequency</p>
+                            <p className="text-sm font-semibold text-gray-500 mb-3">{t('payment.plan.choose_frequency')}</p>
                             <div className="space-y-3">
                                 {freqOptions.map(freq => {
                                     const freqPrice = (plan as any).frequency_prices?.[freq.value];
@@ -445,17 +464,34 @@ const PlanCard = ({
                                             </div>
                                             {typeof freqPrice === 'number' && (
                                                 <span className="text-[#92C7CF] font-semibold">
-                                                    €{freqPrice.toFixed(2)}/{freq.value === 'weekly' ? 'week' : 'month'}
+                                                    €{freqPrice.toFixed(2)}/{freq.value === 'weekly' ? t('payment.plan.per_week') : t('payment.plan.per_month')}
                                                 </span>
                                             )}
                                         </div>
                                     );
                                 })}
                             </div>
+                            {plusConfig?.frequency && frequencyPlanMap?.[plusConfig.frequency] && (
+                                <div className="mt-4 p-3 rounded-xl bg-[#eef7f8] flex items-center justify-between">
+                                    <span className="text-sm text-gray-600">
+                                        {getFrequencies(t).find(f => f.value === plusConfig.frequency)?.label}
+                                    </span>
+                                    <div className="text-right">
+                                        <p className="text-sm font-semibold text-[#92C7CF]">
+                                            {frequencyPlanMap[plusConfig.frequency]?.display_price}
+                                        </p>
+                                        {frequencyPlanMap[plusConfig.frequency]?.display_billing && (
+                                            <p className="text-xs text-gray-500">
+                                                {frequencyPlanMap[plusConfig.frequency]?.display_billing}
+                                            </p>
+                                        )}
+                                    </div>
+                                </div>
+                            )}
                         </div>
                     )}
 
-                    {plan.features.map((feature, index) => (
+                    {displayFeatures.map((feature, index) => (
                         <div key={index} className="flex items-start gap-2">
                             <Check className="w-5 h-5 text-[#92C7CF] flex-shrink-0 mt-0.5" />
                             <span className="text-gray-700">{feature}</span>
@@ -471,6 +507,7 @@ const AddonsPicker = ({ availableAddons, selectedAddons, onToggleAddon, plusConf
     availableAddons: AddonConfig[]; selectedAddons: string[]; onToggleAddon: (id: string) => void;
     plusConfig: any; onConfigChange: (c: any) => void;
 }) => {
+    const { t } = useTranslation();
     const roomsAddon = availableAddons.find(isRoomsAddon);
     const roomsSelected = !!roomsAddon && selectedAddons.includes(roomsAddon.id);
     const selectedRoomCategories: string[] = plusConfig?.room_categories || [];
@@ -486,8 +523,8 @@ const AddonsPicker = ({ availableAddons, selectedAddons, onToggleAddon, plusConf
 
     return (
         <div>
-            <h2 className="text-lg font-semibold mb-1">Add-ons</h2>
-            <p className="text-sm text-gray-500 mb-4">Optional extras, purchased separately</p>
+            <h2 className="text-lg font-semibold mb-1">{t('payment.addons.title')}</h2>
+            <p className="text-sm text-gray-500 mb-4">{t('payment.addons.subtitle')}</p>
             <div className="space-y-3">
                 {availableAddons.map((addon: AddonConfig) => {
                     const isRooms = isRoomsAddon(addon);
@@ -520,7 +557,7 @@ const AddonsPicker = ({ availableAddons, selectedAddons, onToggleAddon, plusConf
                             </Card>
                             {isRooms && isSelected && (
                                 <div className="border border-t-0 border-[#92C7CF] rounded-b-xl p-4 bg-white space-y-3">
-                                    <p className="text-sm text-gray-500">Choose one or more rooms:</p>
+                                    <p className="text-sm text-gray-500">{t('payment.addons.choose_rooms')}</p>
                                     <div className="flex flex-wrap gap-2">
                                         {ROOM_CATEGORIES.map(cat => {
                                             const active = selectedRoomCategories.includes(cat);
@@ -541,7 +578,7 @@ const AddonsPicker = ({ availableAddons, selectedAddons, onToggleAddon, plusConf
                                     {selectedRoomCategories.length === 0 && (
                                         <p className="text-xs text-red-500 flex items-center gap-1">
                                             <AlertCircle className="w-3 h-3" />
-                                            Select at least one room to continue
+                                            {t('payment.addons.select_room_warning')}
                                         </p>
                                     )}
                                 </div>
@@ -557,15 +594,15 @@ const AddonsPicker = ({ availableAddons, selectedAddons, onToggleAddon, plusConf
 const PlusConfigStep = ({ selectedPlan, plusConfig, onConfigChange, onContinue, onBack, availableAddons, selectedAddons, onToggleAddon }: any) => {
     const { t } = useTranslation();
     const sessionTypes: { value: SessionType; label: string; icon: any }[] = [
-        { value: 'individual', label: 'Individual', icon: User },
-        { value: 'couple', label: 'Couple', icon: Users },
+        { value: 'individual', label: t('payment.config.individual'), icon: User },
+        { value: 'couple', label: t('payment.config.couple'), icon: Users },
     ];
 
     const availableTypes: SessionType[] = selectedPlan?.available_session_types || [];
     const typeOptions = sessionTypes.filter(s => availableTypes.includes(s.value));
     const showSessionType = selectedPlan?.requires_frequency_selection && typeOptions.length > 0;
 
-    const selectedFrequencyLabel = FREQUENCIES.find(f => f.value === plusConfig?.frequency)?.label;
+    const selectedFrequencyLabel = getFrequencies(t).find(f => f.value === plusConfig?.frequency)?.label;
 
     const roomsAddon = (availableAddons as AddonConfig[]).find(isRoomsAddon);
     const roomsSelected = !!roomsAddon && selectedAddons.includes(roomsAddon.id);
@@ -584,7 +621,7 @@ const PlusConfigStep = ({ selectedPlan, plusConfig, onConfigChange, onContinue, 
                         <ArrowLeft className="w-6 h-6" />
                     </Button>
                     <div>
-                        <h1 className="text-2xl font-bold">Configure Your Plan</h1>
+                        <h1 className="text-2xl font-bold">{t('payment.config.title')}</h1>
                         <p className="text-sm text-gray-500">
                             {selectedPlan?.name}
                             {selectedFrequencyLabel ? ` · ${selectedFrequencyLabel}` : ''}
@@ -594,7 +631,7 @@ const PlusConfigStep = ({ selectedPlan, plusConfig, onConfigChange, onContinue, 
 
                 {showSessionType && (
                     <div className="mb-8">
-                        <h2 className="text-lg font-semibold mb-4">Session Type</h2>
+                        <h2 className="text-lg font-semibold mb-4">{t('payment.config.session_type')}</h2>
                         <div className="grid grid-cols-2 gap-3">
                             {typeOptions.map(sType => {
                                 const Icon = sType.icon;
@@ -632,7 +669,7 @@ const PlusConfigStep = ({ selectedPlan, plusConfig, onConfigChange, onContinue, 
                     disabled={!canContinue}
                     className="w-full h-14 rounded-full bg-[#92C7CF] hover:bg-[#7FB0B8] text-white text-lg disabled:bg-gray-300"
                 >
-                    Continue to Payment
+                    {t('payment.config.continue')}
                 </Button>
             </div>
         </div>
@@ -700,7 +737,9 @@ const InvoiceSummary = ({
     const hasDiscount = couponResult?.valid && couponResult.discount_amount > 0;
 
     const frequencyLabel: Record<string, string> = {
-        weekly: 'Once per week', bimonthly: 'Twice per month', monthly: 'Once per month'
+        weekly: t('payment.frequency_label.weekly'),
+        bimonthly: t('payment.frequency_label.bimonthly'),
+        monthly: t('payment.frequency_label.monthly'),
     };
 
     const selectedAddonDetails = availableAddons.filter((a: AddonConfig) => selectedAddons.includes(a.id));
@@ -724,7 +763,7 @@ const InvoiceSummary = ({
                     <Card className="p-6 bg-[#F7F7F7]">
                         <p className="text-sm text-gray-500 mb-2">{t('payment.summary.overview_label')}</p>
                         <p className="text-xl font-bold">{selectedPlan.name}</p>
-                        <p className="text-2xl font-extrabold text-[#92C7CF]">€{originalPrice.toFixed(2)}{selectedPlan.plan_type !== 'one_time' ? ' / week' : ''}</p>
+                        <p className="text-2xl font-extrabold text-[#92C7CF]">€{originalPrice.toFixed(2)}{selectedPlan.plan_type !== 'one_time' ? ` / ${t('payment.plan.per_week')}` : ''}</p>
                         {plusConfig && (
                             <div className="mt-3 flex flex-wrap gap-2">
                                 {plusConfig.frequency && (
@@ -734,7 +773,7 @@ const InvoiceSummary = ({
                                 )}
                                 {plusConfig.session_type && (
                                     <Badge variant="outline" className="text-[#92C7CF] border-[#92C7CF] capitalize">
-                                        {plusConfig.session_type} Session
+                                        {plusConfig.session_type} {t('payment.frequency_label.session_suffix')}
                                     </Badge>
                                 )}
                             </div>
@@ -742,7 +781,7 @@ const InvoiceSummary = ({
                     </Card>
                     {selectedAddonDetails.length > 0 && (
                         <Card className="p-6 bg-[#F7F7F7]">
-                            <p className="text-sm text-gray-500 mb-3">Selected Add-ons</p>
+                            <p className="text-sm text-gray-500 mb-3">{t('payment.addons.selected_title')}</p>
                             <div className="space-y-2">
                                 {selectedAddonDetails.map((addon: AddonConfig) => (
                                     <div key={addon.id}>
@@ -771,7 +810,7 @@ const InvoiceSummary = ({
                     <Card className="p-6 border border-gray-200">
                         <div className="flex items-center gap-2 mb-3">
                             <Tag className="w-4 h-4 text-[#92C7CF]" />
-                            <p className="font-medium text-gray-700">Have a coupon code?</p>
+                            <p className="font-medium text-gray-700">{t('payment.coupon.have_code')}</p>
                         </div>
 
                         {couponResult?.valid ? (
@@ -782,7 +821,7 @@ const InvoiceSummary = ({
                                     <p className="text-sm text-green-600">
                                         -{couponResult.coupon?.discount_type === 'percentage'
                                             ? `${couponResult.coupon.discount_value}%`
-                                            : `€${couponResult.discount_amount?.toFixed(2)}`} discount applied
+                                            : `€${couponResult.discount_amount?.toFixed(2)}`} {t('payment.coupon.discount_applied')}
                                     </p>
                                 </div>
                                 <Button variant="ghost" size="sm" onClick={onRemoveCoupon} className="text-gray-400 hover:text-red-500 p-1">
@@ -793,7 +832,7 @@ const InvoiceSummary = ({
                             <div className="space-y-2">
                                 <div className="flex gap-2">
                                     <Input
-                                        placeholder="Enter coupon code"
+                                        placeholder={t('payment.coupon.placeholder')}
                                         value={couponCode}
                                         onChange={(e) => onCouponCodeChange(e.target.value.toUpperCase())}
                                         className="uppercase"
@@ -804,7 +843,7 @@ const InvoiceSummary = ({
                                         disabled={!couponCode.trim() || isCouponLoading}
                                         className="bg-[#92C7CF] hover:bg-[#7FB0B8] text-white px-6 rounded-xl"
                                     >
-                                        {isCouponLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : 'Apply'}
+                                        {isCouponLoading ? <Loader2 className="w-4 h-4 animate-spin" /> : t('payment.coupon.apply')}
                                     </Button>
                                 </div>
                                 {couponResult?.error && (
@@ -819,31 +858,31 @@ const InvoiceSummary = ({
                     <Card className="p-6 border border-gray-300">
                         <div className="space-y-3">
                             <div className="flex justify-between">
-                                <span className="text-gray-600">Subtotal</span>
+                                <span className="text-gray-600">{t('payment.summary.subtotal')}</span>
                                 <span className="font-medium">€{originalPrice.toFixed(2)}</span>
                             </div>
 
                             {addonsTotal > 0 && (
                                 <div className="flex justify-between">
-                                    <span className="text-gray-600">Add-ons</span>
+                                    <span className="text-gray-600">{t('payment.summary.addons_label')}</span>
                                     <span className="font-medium">€{addonsTotal.toFixed(2)}</span>
                                 </div>
                             )}
 
                             {hasDiscount && (
                                 <div className="flex justify-between text-green-600">
-                                    <span>Discount ({couponCode.toUpperCase()})</span>
+                                    <span>{t('payment.summary.discount_label')} ({couponCode.toUpperCase()})</span>
                                     <span className="font-medium">-€{couponResult.discount_amount?.toFixed(2)}</span>
                                 </div>
                             )}
 
                             <div className="border-t pt-3 flex justify-between">
-                                <span className="text-lg font-bold">Total</span>
+                                <span className="text-lg font-bold">{t('payment.summary.total')}</span>
                                 <span className="text-lg font-bold text-[#92C7CF]">€{finalPrice.toFixed(2)}</span>
                             </div>
 
                             {selectedPlan.plan_type !== 'one_time' && (
-                                <p className="text-xs text-gray-400 text-center">Billed per week · Cancel anytime</p>
+                                <p className="text-xs text-gray-400 text-center">{t('payment.summary.billed_note')}</p>
                             )}
                         </div>
                     </Card>
@@ -863,7 +902,7 @@ const InvoiceSummary = ({
                                 {t('payment.summary.processing')}
                             </div>
                         ) : (
-                            `Pay €${finalPrice.toFixed(2)}`
+                            `${t('payment.summary.pay_button')} €${finalPrice.toFixed(2)}`
                         )}
                     </Button>
 
@@ -874,7 +913,7 @@ const InvoiceSummary = ({
                             variant="outline"
                             className="w-full h-12 rounded-full border-2 border-orange-500 text-orange-500 hover:bg-orange-50 disabled:opacity-50"
                         >
-                            🎭 Mock Payment (Dev Only)
+                            🎭 {t('payment.mock_dev')}
                         </Button>
                     )}
                 </div>

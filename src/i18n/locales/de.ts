@@ -769,7 +769,13 @@ export const de = {
                 "confirm": "Bestätigen und bezahlen",
                 "processing": "Zahlung wird verarbeitet...",
                 "subtotal_weekly": "Zwischensumme (wöchentlich)",
-                "price": "Preis"
+                "price": "Preis",
+                "subtotal": "Zwischensumme",
+                "addons_label": "Zusatzleistungen",
+                "discount_label": "Rabatt",
+                "total": "Gesamt",
+                "billed_note": "Wöchentlich abgerechnet · Jederzeit kündbar",
+                "pay_button": "Bezahlen"
             },
             "success": {
                 "title": "Zahlung erfolgreich!",
@@ -784,6 +790,65 @@ export const de = {
                 "desc": "Bitte schließen Sie die Zahlung in dem neuen Browserfenster ab.",
                 "popup_failed": "Wenn das Zahlungsfenster nicht automatisch geöffnet wurde:",
                 "click_here": "Klicken Sie hier, um zu bezahlen"
+            },
+            "categories": {
+                "basic": "Basis",
+                "plus": "Plus",
+                "coaching": "Coaching",
+                "therapy_couples": "Paartherapie",
+                "plus_plan": "Plus-Plan"
+            },
+            "plan": {
+                "popular": "Beliebt",
+                "min_suffix": "Min.",
+                "choose_your_frequency": "Wählen Sie Ihre Häufigkeit",
+                "choose_frequency": "Häufigkeit wählen",
+                "per_week": "Woche",
+                "per_month": "Monat",
+                "freq_weekly_label": "1x pro Woche",
+                "freq_weekly_sub": "Am meisten empfohlen",
+                "freq_bimonthly_label": "2x pro Monat",
+                "freq_bimonthly_sub": "Guter Kompromiss",
+                "freq_monthly_label": "1x pro Monat",
+                "freq_monthly_sub": "Flexible Option"
+            },
+            "addons": {
+                "title": "Zusatzleistungen",
+                "subtitle": "Optionale Extras, separat erhältlich",
+                "choose_rooms": "Wählen Sie einen oder mehrere Räume:",
+                "select_room_warning": "Bitte wählen Sie mindestens einen Raum aus, um fortzufahren",
+                "selected_title": "Ausgewählte Zusatzleistungen"
+            },
+            "config": {
+                "title": "Konfigurieren Sie Ihren Plan",
+                "session_type": "Sitzungsart",
+                "individual": "Einzeln",
+                "couple": "Paar",
+                "continue": "Weiter zur Zahlung"
+            },
+            "coupon": {
+                "have_code": "Haben Sie einen Gutscheincode?",
+                "placeholder": "Gutscheincode eingeben",
+                "apply": "Anwenden",
+                "discount_applied": "Rabatt angewendet"
+            },
+            "frequency_label": {
+                "weekly": "Einmal pro Woche",
+                "bimonthly": "Zweimal im Monat",
+                "monthly": "Einmal im Monat",
+                "session_suffix": "Sitzung"
+            },
+            "mock_dev": "Test-Zahlung (nur Entwicklung)",
+            "addon_catalog": {
+                "hypnosis": { "name": "Hypnose-Sitzung", "description": "Angeleitete Hypnotherapie-Sitzung" },
+                "additional_sessions": { "name": "Zusätzliche Sitzungen", "description": "Zusätzliche Therapiesitzungen" },
+                "emdr": { "name": "EMDR-Sitzung", "description": "Eye Movement Desensitization and Reprocessing" },
+                "rooms": { "name": "Räume (Community-Bereiche)", "description": "Zugang zu Community-Support-Bereichen" },
+                "group_sessions": { "name": "Gruppensitzungen", "description": "An Gruppentherapiesitzungen teilnehmen" },
+                "diagnostics_autism": { "name": "Diagnostik — Autismus", "description": "Professionelle Autismus-Diagnostik" },
+                "diagnostics_adhd": { "name": "Diagnostik — ADHS", "description": "Professionelle ADHS-Diagnostik" },
+                "diagnostics_depression": { "name": "Diagnostik — Depression", "description": "Professionelle Depressions-Diagnostik" },
+                "reports": { "name": "Berichte (Befunde)", "description": "Detaillierte Therapiefortschrittsberichte" }
             }
         },
         "profile": {

@@ -14,11 +14,7 @@
       "plan_type": "subscription",
       "requires_frequency_selection": false,
       "requires_session_type_selection": false,
-      "features": [
-        "Chat",
-        "Journaling",
-        "Mood Tracker"
-      ],
+      "features": ["Chat", "Journaling", "Mood Tracker"],
       "quotas": {
         "offline_messages_per_day": 5,
         "message_word_limit": 2500,
@@ -45,21 +41,12 @@
       "plan_type": "subscription",
       "session_duration": 45,
       "requires_frequency_selection": false,
-      "available_frequencies": [
-        "weekly"
-      ],
-      "frequency_prices": {
-        "weekly": 64.99
-      },
+      "available_frequencies": ["weekly"],
+      "frequency_prices": { "weekly": 64.99 },
       "frequency_stripe_price_ids": {
         "weekly": "price_1St3XVCIhcbX3ibwJjh8DofE"
       },
-      "features": [
-        "Chat",
-        "Journaling",
-        "Mood Tracker",
-        "Up to 4 sessions"
-      ],
+      "features": ["Chat", "Journaling", "Mood Tracker", "Up to 4 sessions"],
       "quotas": {
         "offline_messages_per_day": 0,
         "message_word_limit": 0,
@@ -366,9 +353,7 @@
       "display_price": "TBD",
       "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
       "setup_note": "Price not yet provided by client.",
-      "available_for_plans": [
-        "basic_monthly"
-      ]
+      "available_for_plans": ["basic_monthly"]
     },
     {
       "id": "emdr",
@@ -452,6 +437,7 @@
     {
       "id": "basic_monthly",
       "name": "Basisplan",
+      "plan_category": "basic",
       "price": 9.99,
       "currency": "EUR",
       "billing_period": "weekly",
@@ -460,11 +446,10 @@
       "stripe_price_id": "price_1Si7hcCIhcbX3ibwhH9nm3Fj",
       "stripe_product_id": "prod_TfScxVz3JErPaM",
       "plan_type": "subscription",
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
       "features": [
-        "9,99 € pro Woche, monatlich abgerechnet (39,96 €)",
-        "5 tägliche Nachrichten mit einem Limit von 2500 Wörtern",
-        "Antwort vom lizenzierten Therapeuten innerhalb von 24 Stunden",
-        "Chat, Stimmungstracker, Journaling und Affirmationen"
+        "Chat, Journaling und Stimmungstracker"
       ],
       "quotas": {
         "offline_messages_per_day": 5,
@@ -479,8 +464,9 @@
       "popular": false
     },
     {
-      "id": "full_support_monthly",
-      "name": "Voll-Support-Plan",
+      "id": "plus_weekly",
+      "name": "Plus-Plan — 1x pro Woche",
+      "plan_category": "plus",
       "price": 64.99,
       "currency": "EUR",
       "billing_period": "weekly",
@@ -489,12 +475,18 @@
       "stripe_price_id": "price_1St3XVCIhcbX3ibwJjh8DofE",
       "stripe_product_id": "prod_Tql38MgnGKoVHk",
       "plan_type": "subscription",
+      "session_duration": 45,
+      "requires_frequency_selection": false,
+      "available_frequencies": ["weekly"],
+      "frequency_prices": { "weekly": 64.99 },
+      "frequency_stripe_price_ids": {
+        "weekly": "price_1St3XVCIhcbX3ibwJjh8DofE"
+      },
       "features": [
-        "64,99 € pro Woche, monatlich abgerechnet (259,96 €)",
-        "Antwort von einem lizenzierten Therapeuten innerhalb von 24 Stunden",
-        "Vier 45-minütige Live-Sitzungen pro Monat",
-        "Stimmungstracker, Journaling und Affirmation",
-        "Monatlich kündbar"
+        "Chat",
+        "Journaling",
+        "Stimmungstracker",
+        "Bis zu 4 Sitzungen"
       ],
       "quotas": {
         "offline_messages_per_day": 0,
@@ -509,8 +501,67 @@
       "popular": true
     },
     {
+      "id": "plus_bimonthly",
+      "name": "Plus-Plan — 2x pro Monat",
+      "plan_category": "plus",
+      "price": 34.99,
+      "currency": "EUR",
+      "billing_period": "monthly",
+      "billing_cycle": "monthly",
+      "actual_charge": 34.99,
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
+      "setup_note": "NOCH NICHT LIVE — benötigt einen echten Stripe-Preis (wiederkehrend, 34,99 €).",
+      "plan_type": "subscription",
+      "session_duration": 45,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "2 Sitzungen pro Monat",
+        "45-minütige Sitzungen",
+        "Einzeltherapie"
+      ],
+      "quotas": {
+        "live_sessions_per_month": 2,
+        "session_duration_minutes": 45
+      },
+      "display_price": "34,99 €/Monat",
+      "display_billing": "2 Sitzungen pro Monat",
+      "popular": false
+    },
+    {
+      "id": "plus_monthly",
+      "name": "Plus-Plan — 1x pro Monat",
+      "plan_category": "plus",
+      "price": 19.99,
+      "currency": "EUR",
+      "billing_period": "monthly",
+      "billing_cycle": "monthly",
+      "actual_charge": 19.99,
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
+      "setup_note": "NOCH NICHT LIVE — benötigt einen echten Stripe-Preis (wiederkehrend, 19,99 €).",
+      "plan_type": "subscription",
+      "session_duration": 45,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "1 Sitzung pro Monat",
+        "45-minütige Sitzungen",
+        "Einzeltherapie"
+      ],
+      "quotas": {
+        "live_sessions_per_month": 1,
+        "session_duration_minutes": 45
+      },
+      "display_price": "19,99 €/Monat",
+      "display_billing": "1 Sitzung pro Monat",
+      "popular": false
+    },
+    {
       "id": "one_time_session",
       "name": "Einmalige Sitzung",
+      "plan_category": "one_time",
       "price": 79.99,
       "currency": "EUR",
       "billing_period": "one_time",
@@ -518,6 +569,8 @@
       "stripe_price_id": "price_1St3aSCIhcbX3ibwNXoBqyMO",
       "stripe_product_id": "prod_Tql6ICKUDCuDCr",
       "plan_type": "one_time",
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
       "features": [
         "79,99 € pro Sitzung",
         "45-minütige Sitzung via Audio, Video oder Chat",
@@ -537,7 +590,8 @@
     },
     {
       "id": "couples_support_monthly",
-      "name": "Paar-Voll-Support-Plan",
+      "name": "Paartherapie — 1x pro Woche",
+      "plan_category": "therapy_couples",
       "price": 84.99,
       "currency": "EUR",
       "billing_period": "weekly",
@@ -546,10 +600,13 @@
       "stripe_price_id": "price_1St3ZtCIhcbX3ibwQHlxN9TI",
       "stripe_product_id": "prod_Tql69WrC9MXspD",
       "plan_type": "subscription",
+      "session_duration": 45,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
       "features": [
-        "84,99 € pro Woche, monatlich abgerechnet (339,96 €)",
-        "Vier 45-minütige Live-Sitzungen pro Monat",
-        "Stimmungstracker, Journaling und Affirmation",
+        "1 Sitzung pro Woche",
+        "45-minütige Sitzungen",
+        "Stimmungstracker, Journaling und Affirmationen",
         "Monatlich kündbar"
       ],
       "quotas": {
@@ -563,12 +620,164 @@
       "display_price": "84,99 €/Woche",
       "display_billing": "Monatliche Abrechnung von 339,96 €",
       "popular": false
+    },
+    {
+      "id": "therapy_couples_bimonthly",
+      "name": "Paartherapie — 2x pro Monat",
+      "plan_category": "therapy_couples",
+      "price": 44.99,
+      "currency": "EUR",
+      "billing_period": "monthly",
+      "billing_cycle": "monthly",
+      "actual_charge": 44.99,
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
+      "setup_note": "NOCH NICHT LIVE — benötigt einen echten Stripe-Preis (wiederkehrend, 44,99 €).",
+      "plan_type": "subscription",
+      "session_duration": 45,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "2 Sitzungen pro Monat",
+        "45-minütige Sitzungen",
+        "Paartherapie"
+      ],
+      "quotas": {
+        "live_sessions_per_month": 2,
+        "session_duration_minutes": 45
+      },
+      "display_price": "44,99 €/Monat",
+      "display_billing": "2 Sitzungen pro Monat",
+      "popular": false
+    },
+    {
+      "id": "therapy_couples_monthly",
+      "name": "Paartherapie — 1x pro Monat",
+      "plan_category": "therapy_couples",
+      "price": 29.99,
+      "currency": "EUR",
+      "billing_period": "monthly",
+      "billing_cycle": "monthly",
+      "actual_charge": 29.99,
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
+      "setup_note": "NOCH NICHT LIVE — benötigt einen echten Stripe-Preis (wiederkehrend, 29,99 €).",
+      "plan_type": "subscription",
+      "session_duration": 45,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "1 Sitzung pro Monat",
+        "45-minütige Sitzungen",
+        "Paartherapie"
+      ],
+      "quotas": {
+        "live_sessions_per_month": 1,
+        "session_duration_minutes": 45
+      },
+      "display_price": "29,99 €/Monat",
+      "display_billing": "1 Sitzung pro Monat",
+      "popular": false
+    },
+    {
+      "id": "coaching_weekly",
+      "name": "Coaching — 1x pro Woche",
+      "plan_category": "coaching",
+      "price": 49.99,
+      "currency": "EUR",
+      "billing_period": "weekly",
+      "billing_cycle": "monthly",
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
+      "setup_note": "NOCH NICHT LIVE — benötigt einen echten Stripe-Preis (wiederkehrend, 49,99 €).",
+      "plan_type": "subscription",
+      "session_duration": 30,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "30-minütige Coaching-Sitzungen",
+        "1 Sitzung pro Woche",
+        "Offline-Chat",
+        "Zielverfolgung"
+      ],
+      "quotas": {
+        "live_sessions_per_month": 4,
+        "session_duration_minutes": 30,
+        "message_word_limit": 500
+      },
+      "display_price": "49,99 €/Woche",
+      "display_billing": "Monatliche Abrechnung von 199,96 € · 30-minütige Sitzungen",
+      "popular": false,
+      "actual_charge": 199.96
+    },
+    {
+      "id": "coaching_bimonthly",
+      "name": "Coaching — 2x pro Monat",
+      "plan_category": "coaching",
+      "price": 24.99,
+      "currency": "EUR",
+      "billing_period": "monthly",
+      "billing_cycle": "monthly",
+      "actual_charge": 24.99,
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
+      "setup_note": "NOCH NICHT LIVE — benötigt einen echten Stripe-Preis (wiederkehrend, 24,99 €).",
+      "plan_type": "subscription",
+      "session_duration": 30,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "30-minütige Coaching-Sitzungen",
+        "2 Sitzungen pro Monat",
+        "Offline-Chat",
+        "Zielverfolgung"
+      ],
+      "quotas": {
+        "live_sessions_per_month": 2,
+        "session_duration_minutes": 30,
+        "message_word_limit": 500
+      },
+      "display_price": "24,99 €/Monat",
+      "display_billing": "30-minütige Sitzungen · 2x pro Monat",
+      "popular": false
+    },
+    {
+      "id": "coaching_monthly",
+      "name": "Coaching — 1x pro Monat",
+      "plan_category": "coaching",
+      "price": 14.99,
+      "currency": "EUR",
+      "billing_period": "monthly",
+      "billing_cycle": "monthly",
+      "actual_charge": 14.99,
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
+      "setup_note": "NOCH NICHT LIVE — benötigt einen echten Stripe-Preis (wiederkehrend, 14,99 €).",
+      "plan_type": "subscription",
+      "session_duration": 30,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "30-minütige Coaching-Sitzungen",
+        "1 Sitzung pro Monat",
+        "Offline-Chat",
+        "Zielverfolgung"
+      ],
+      "quotas": {
+        "live_sessions_per_month": 1,
+        "session_duration_minutes": 30,
+        "message_word_limit": 500
+      },
+      "display_price": "14,99 €/Monat",
+      "display_billing": "30-minütige Sitzungen · 1x pro Monat",
+      "popular": false
     }
   ],
   "therapy_session_plans_hr": [
     {
       "id": "basic_monthly",
       "name": "Osnovni Plan",
+      "plan_category": "basic",
       "price": 9.99,
       "currency": "EUR",
       "billing_period": "weekly",
@@ -577,11 +786,10 @@
       "stripe_price_id": "price_1Si7hcCIhcbX3ibwhH9nm3Fj",
       "stripe_product_id": "prod_TfScxVz3JErPaM",
       "plan_type": "subscription",
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
       "features": [
-        "9,99 € tjedno, naplaćuje se mjesečno (39,96 €)",
-        "5 dnevnih poruka s ograničenjem od 2500 riječi",
-        "Odgovor licenciranog terapeuta unutar 24 sata",
-        "Chat, Praćenje raspoloženja, Dnevnik i Afirmacije"
+        "Chat", "Dnevnik", "Praćenje raspoloženja"
       ],
       "quotas": {
         "offline_messages_per_day": 5,
@@ -596,8 +804,9 @@
       "popular": false
     },
     {
-      "id": "full_support_monthly",
-      "name": "Plan Pune Podrške",
+      "id": "plus_weekly",
+      "name": "Plus Plan — 1x tjedno",
+      "plan_category": "plus",
       "price": 64.99,
       "currency": "EUR",
       "billing_period": "weekly",
@@ -606,13 +815,14 @@
       "stripe_price_id": "price_1St3XVCIhcbX3ibwJjh8DofE",
       "stripe_product_id": "prod_Tql38MgnGKoVHk",
       "plan_type": "subscription",
-      "features": [
-        "64,99 € tjedno, naplaćuje se mjesečno (259,96 €)",
-        "Odgovor licenciranog terapeuta unutar 24 sata",
-        "Četiri 45-minutne sesije uživo mjesečno",
-        "Praćenje raspoloženja, Dnevnik i Afirmacije",
-        "Može se otkazati na mjesečnoj bazi"
-      ],
+      "session_duration": 45,
+      "requires_frequency_selection": false,
+      "available_frequencies": ["weekly"],
+      "frequency_prices": { "weekly": 64.99 },
+      "frequency_stripe_price_ids": {
+        "weekly": "price_1St3XVCIhcbX3ibwJjh8DofE"
+      },
+      "features": ["Chat", "Dnevnik", "Praćenje raspoloženja", "Do 4 sesije"],
       "quotas": {
         "offline_messages_per_day": 0,
         "message_word_limit": 0,
@@ -626,8 +836,67 @@
       "popular": true
     },
     {
+      "id": "plus_bimonthly",
+      "name": "Plus Plan — 2x mjesečno",
+      "plan_category": "plus",
+      "price": 34.99,
+      "currency": "EUR",
+      "billing_period": "monthly",
+      "billing_cycle": "monthly",
+      "actual_charge": 34.99,
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
+      "setup_note": "JOŠ NIJE AKTIVNO — potreban je pravi Stripe cijena (ponavljajuća, 34,99 €).",
+      "plan_type": "subscription",
+      "session_duration": 45,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "2 sesije mjesečno",
+        "45-minutne sesije",
+        "Individualna terapija"
+      ],
+      "quotas": {
+        "live_sessions_per_month": 2,
+        "session_duration_minutes": 45
+      },
+      "display_price": "34,99 €/mjesečno",
+      "display_billing": "2 sesije mjesečno",
+      "popular": false
+    },
+    {
+      "id": "plus_monthly",
+      "name": "Plus Plan — 1x mjesečno",
+      "plan_category": "plus",
+      "price": 19.99,
+      "currency": "EUR",
+      "billing_period": "monthly",
+      "billing_cycle": "monthly",
+      "actual_charge": 19.99,
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
+      "setup_note": "JOŠ NIJE AKTIVNO — potreban je pravi Stripe cijena (ponavljajuća, 19,99 €).",
+      "plan_type": "subscription",
+      "session_duration": 45,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "1 sesija mjesečno",
+        "45-minutne sesije",
+        "Individualna terapija"
+      ],
+      "quotas": {
+        "live_sessions_per_month": 1,
+        "session_duration_minutes": 45
+      },
+      "display_price": "19,99 €/mjesečno",
+      "display_billing": "1 sesija mjesečno",
+      "popular": false
+    },
+    {
       "id": "one_time_session",
       "name": "Jednokratna Sesija",
+      "plan_category": "one_time",
       "price": 79.99,
       "currency": "EUR",
       "billing_period": "one_time",
@@ -635,6 +904,8 @@
       "stripe_price_id": "price_1St3aSCIhcbX3ibwYRy690wu",
       "stripe_product_id": "prod_Tql6ICKUDCuDCr",
       "plan_type": "one_time",
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
       "features": [
         "79,99 € po sesiji",
         "45-minutna sesija putem zvuka, videa ili chata",
@@ -654,7 +925,8 @@
     },
     {
       "id": "couples_support_monthly",
-      "name": "Plan Pune Podrške za Parove",
+      "name": "Terapija za Parove — 1x tjedno",
+      "plan_category": "therapy_couples",
       "price": 84.99,
       "currency": "EUR",
       "billing_period": "weekly",
@@ -663,11 +935,14 @@
       "stripe_price_id": "price_1St3ZtCIhcbX3ibwQHlxN9TI",
       "stripe_product_id": "prod_Tql69WrC9MXspD",
       "plan_type": "subscription",
+      "session_duration": 45,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
       "features": [
-        "84,99 € tjedno, naplaćuje se mjesečno (339,96 €)",
-        "Četiri 45-minutne sesije uživo mjesečno",
+        "1 sesija tjedno",
+        "45-minutne sesije",
         "Praćenje raspoloženja, Dnevnik i Afirmacije",
-        "Može se otkazati na mjesečnoj bazi"
+        "Može se otkazati mjesečno"
       ],
       "quotas": {
         "offline_messages_per_day": 0,
@@ -680,12 +955,164 @@
       "display_price": "84,99 €/tjedno",
       "display_billing": "Naplaćuje se mjesečno 339,96 €",
       "popular": false
+    },
+    {
+      "id": "therapy_couples_bimonthly",
+      "name": "Terapija za Parove — 2x mjesečno",
+      "plan_category": "therapy_couples",
+      "price": 44.99,
+      "currency": "EUR",
+      "billing_period": "monthly",
+      "billing_cycle": "monthly",
+      "actual_charge": 44.99,
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
+      "setup_note": "JOŠ NIJE AKTIVNO — potreban je pravi Stripe cijena (ponavljajuća, 44,99 €).",
+      "plan_type": "subscription",
+      "session_duration": 45,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "2 sesije mjesečno",
+        "45-minutne sesije",
+        "Terapija za parove"
+      ],
+      "quotas": {
+        "live_sessions_per_month": 2,
+        "session_duration_minutes": 45
+      },
+      "display_price": "44,99 €/mjesečno",
+      "display_billing": "2 sesije mjesečno",
+      "popular": false
+    },
+    {
+      "id": "therapy_couples_monthly",
+      "name": "Terapija za Parove — 1x mjesečno",
+      "plan_category": "therapy_couples",
+      "price": 29.99,
+      "currency": "EUR",
+      "billing_period": "monthly",
+      "billing_cycle": "monthly",
+      "actual_charge": 29.99,
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
+      "setup_note": "JOŠ NIJE AKTIVNO — potreban je pravi Stripe cijena (ponavljajuća, 29,99 €).",
+      "plan_type": "subscription",
+      "session_duration": 45,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "1 sesija mjesečno",
+        "45-minutne sesije",
+        "Terapija za parove"
+      ],
+      "quotas": {
+        "live_sessions_per_month": 1,
+        "session_duration_minutes": 45
+      },
+      "display_price": "29,99 €/mjesečno",
+      "display_billing": "1 sesija mjesečno",
+      "popular": false
+    },
+    {
+      "id": "coaching_weekly",
+      "name": "Coaching — 1x tjedno",
+      "plan_category": "coaching",
+      "price": 49.99,
+      "currency": "EUR",
+      "billing_period": "weekly",
+      "billing_cycle": "monthly",
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
+      "setup_note": "JOŠ NIJE AKTIVNO — potreban je pravi Stripe cijena (ponavljajuća, 49,99 €).",
+      "plan_type": "subscription",
+      "session_duration": 30,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "30-minutne coaching sesije",
+        "1 sesija tjedno",
+        "Offline chat",
+        "Praćenje ciljeva"
+      ],
+      "quotas": {
+        "live_sessions_per_month": 4,
+        "session_duration_minutes": 30,
+        "message_word_limit": 500
+      },
+      "display_price": "49,99 €/tjedno",
+      "display_billing": "Naplaćuje se mjesečno 199,96 € · 30-minutne sesije",
+      "popular": false,
+      "actual_charge": 199.96
+    },
+    {
+      "id": "coaching_bimonthly",
+      "name": "Coaching — 2x mjesečno",
+      "plan_category": "coaching",
+      "price": 24.99,
+      "currency": "EUR",
+      "billing_period": "monthly",
+      "billing_cycle": "monthly",
+      "actual_charge": 24.99,
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
+      "setup_note": "JOŠ NIJE AKTIVNO — potreban je pravi Stripe cijena (ponavljajuća, 24,99 €).",
+      "plan_type": "subscription",
+      "session_duration": 30,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "30-minutne coaching sesije",
+        "2 sesije mjesečno",
+        "Offline chat",
+        "Praćenje ciljeva"
+      ],
+      "quotas": {
+        "live_sessions_per_month": 2,
+        "session_duration_minutes": 30,
+        "message_word_limit": 500
+      },
+      "display_price": "24,99 €/mjesečno",
+      "display_billing": "30-minutne sesije · 2x mjesečno",
+      "popular": false
+    },
+    {
+      "id": "coaching_monthly",
+      "name": "Coaching — 1x mjesečno",
+      "plan_category": "coaching",
+      "price": 14.99,
+      "currency": "EUR",
+      "billing_period": "monthly",
+      "billing_cycle": "monthly",
+      "actual_charge": 14.99,
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
+      "setup_note": "JOŠ NIJE AKTIVNO — potreban je pravi Stripe cijena (ponavljajuća, 14,99 €).",
+      "plan_type": "subscription",
+      "session_duration": 30,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "30-minutne coaching sesije",
+        "1 sesija mjesečno",
+        "Offline chat",
+        "Praćenje ciljeva"
+      ],
+      "quotas": {
+        "live_sessions_per_month": 1,
+        "session_duration_minutes": 30,
+        "message_word_limit": 500
+      },
+      "display_price": "14,99 €/mjesečno",
+      "display_billing": "30-minutne sesije · 1x mjesečno",
+      "popular": false
     }
   ],
   "therapy_session_plans_el": [
     {
       "id": "basic_monthly",
       "name": "Βασικό Πλάνο",
+      "plan_category": "basic",
       "price": 9.99,
       "currency": "EUR",
       "billing_period": "weekly",
@@ -694,11 +1121,12 @@
       "stripe_price_id": "price_1Si7hcCIhcbX3ibwhH9nm3Fj",
       "stripe_product_id": "prod_TfScxVz3JErPaM",
       "plan_type": "subscription",
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
       "features": [
-        "9,99 € ανά εβδομάδα, χρεώνεται μηνιαίως (39,96 €)",
-        "5 καθημερινά μηνύματα με όριο 2500 λέξεων",
-        "Απάντηση από αδειούχο θεραπευτή εντός 24 ωρών",
-        "Chat, Καταγραφή διάθεσης, Ημερολόγιο και Θετικές δηλώσεις"
+        "Chat",
+        "Ημερολόγιο",
+        "Καταγραφή διάθεσης"
       ],
       "quotas": {
         "offline_messages_per_day": 5,
@@ -713,8 +1141,9 @@
       "popular": false
     },
     {
-      "id": "full_support_monthly",
-      "name": "Πλάνο Πλήρους Υποστήριξης",
+      "id": "plus_weekly",
+      "name": "Πλάνο Plus — 1x την εβδομάδα",
+      "plan_category": "plus",
       "price": 64.99,
       "currency": "EUR",
       "billing_period": "weekly",
@@ -723,12 +1152,18 @@
       "stripe_price_id": "price_1St3XVCIhcbX3ibwJjh8DofE",
       "stripe_product_id": "prod_Tql38MgnGKoVHk",
       "plan_type": "subscription",
+      "session_duration": 45,
+      "requires_frequency_selection": false,
+      "available_frequencies": ["weekly"],
+      "frequency_prices": { "weekly": 64.99 },
+      "frequency_stripe_price_ids": {
+        "weekly": "price_1St3XVCIhcbX3ibwJjh8DofE"
+      },
       "features": [
-        "64,99 € ανά εβδομάδα, χρεώνεται μηνιαίως (259,96 €)",
-        "Απάντηση από αδειούχο θεραπευτή εντός 24 ωρών",
-        "Τέσσερις ζωντανές συνεδρίες 45 λεπτών το μήνα",
-        "Καταγραφή διάθεσης, Ημερολόγιο και Θετικές δηλώσεις",
-        "Μπορεί να τερματιστεί σε μηνιαία βάση"
+        "Chat",
+        "Ημερολόγιο",
+        "Καταγραφή διάθεσης",
+        "Έως 4 συνεδρίες"
       ],
       "quotas": {
         "offline_messages_per_day": 0,
@@ -743,8 +1178,67 @@
       "popular": true
     },
     {
+      "id": "plus_bimonthly",
+      "name": "Πλάνο Plus — 2x τον μήνα",
+      "plan_category": "plus",
+      "price": 34.99,
+      "currency": "EUR",
+      "billing_period": "monthly",
+      "billing_cycle": "monthly",
+      "actual_charge": 34.99,
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
+      "setup_note": "ΔΕΝ ΕΙΝΑΙ ΑΚΟΜΑ ΕΝΕΡΓΟ — απαιτείται πραγματική τιμή Stripe (επαναλαμβανόμενη, 34,99 €).",
+      "plan_type": "subscription",
+      "session_duration": 45,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "2 συνεδρίες τον μήνα",
+        "Συνεδρίες 45 λεπτών",
+        "Ατομική θεραπεία"
+      ],
+      "quotas": {
+        "live_sessions_per_month": 2,
+        "session_duration_minutes": 45
+      },
+      "display_price": "34,99 €/μήνα",
+      "display_billing": "2 συνεδρίες τον μήνα",
+      "popular": false
+    },
+    {
+      "id": "plus_monthly",
+      "name": "Πλάνο Plus — 1x τον μήνα",
+      "plan_category": "plus",
+      "price": 19.99,
+      "currency": "EUR",
+      "billing_period": "monthly",
+      "billing_cycle": "monthly",
+      "actual_charge": 19.99,
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
+      "setup_note": "ΔΕΝ ΕΙΝΑΙ ΑΚΟΜΑ ΕΝΕΡΓΟ — απαιτείται πραγματική τιμή Stripe (επαναλαμβανόμενη, 19,99 €).",
+      "plan_type": "subscription",
+      "session_duration": 45,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "1 συνεδρία τον μήνα",
+        "Συνεδρίες 45 λεπτών",
+        "Ατομική θεραπεία"
+      ],
+      "quotas": {
+        "live_sessions_per_month": 1,
+        "session_duration_minutes": 45
+      },
+      "display_price": "19,99 €/μήνα",
+      "display_billing": "1 συνεδρία τον μήνα",
+      "popular": false
+    },
+    {
       "id": "one_time_session",
       "name": "Μοναδική Συνεδρία",
+      "plan_category": "one_time",
       "price": 79.99,
       "currency": "EUR",
       "billing_period": "one_time",
@@ -752,6 +1246,8 @@
       "stripe_price_id": "price_1St3aSCIhcbX3ibwYRy690wu",
       "stripe_product_id": "prod_Tql6ICKUDCuDCr",
       "plan_type": "one_time",
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
       "features": [
         "79,99 € ανά συνεδρία",
         "Συνεδρία 45 λεπτών μέσω ήχου, εικόνας ή συνομιλίας",
@@ -771,7 +1267,8 @@
     },
     {
       "id": "couples_support_monthly",
-      "name": "Πλάνο Πλήρους Υποστήριξης για Ζευγάρια",
+      "name": "Θεραπεία Ζευγαριών — 1x την εβδομάδα",
+      "plan_category": "therapy_couples",
       "price": 84.99,
       "currency": "EUR",
       "billing_period": "weekly",
@@ -780,11 +1277,14 @@
       "stripe_price_id": "price_1St3ZtCIhcbX3ibwQHlxN9TI",
       "stripe_product_id": "prod_Tql69WrC9MXspD",
       "plan_type": "subscription",
+      "session_duration": 45,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
       "features": [
-        "84,99 € ανά εβδομάδα, χρεώνεται μηνιαίως (339,96 €)",
-        "Τέσσερις ζωντανές συνεδρίες 45 λεπτών το μήνα",
+        "1 συνεδρία την εβδομάδα",
+        "Συνεδρίες 45 λεπτών",
         "Καταγραφή διάθεσης, Ημερολόγιο και Θετικές δηλώσεις",
-        "Μπορεί να τερματιστεί σε μηνιαία βάση"
+        "Μπορεί να τερματιστεί μηνιαία"
       ],
       "quotas": {
         "offline_messages_per_day": 0,
@@ -797,6 +1297,157 @@
       "display_price": "84,99 €/εβδομάδα",
       "display_billing": "Χρέωση μηνιαίως στα 339,96 €",
       "popular": false
+    },
+    {
+      "id": "therapy_couples_bimonthly",
+      "name": "Θεραπεία Ζευγαριών — 2x τον μήνα",
+      "plan_category": "therapy_couples",
+      "price": 44.99,
+      "currency": "EUR",
+      "billing_period": "monthly",
+      "billing_cycle": "monthly",
+      "actual_charge": 44.99,
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
+      "setup_note": "ΔΕΝ ΕΙΝΑΙ ΑΚΟΜΑ ΕΝΕΡΓΟ — απαιτείται πραγματική τιμή Stripe (επαναλαμβανόμενη, 44,99 €).",
+      "plan_type": "subscription",
+      "session_duration": 45,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "2 συνεδρίες τον μήνα",
+        "Συνεδρίες 45 λεπτών",
+        "Θεραπεία ζευγαριών"
+      ],
+      "quotas": {
+        "live_sessions_per_month": 2,
+        "session_duration_minutes": 45
+      },
+      "display_price": "44,99 €/μήνα",
+      "display_billing": "2 συνεδρίες τον μήνα",
+      "popular": false
+    },
+    {
+      "id": "therapy_couples_monthly",
+      "name": "Θεραπεία Ζευγαριών — 1x τον μήνα",
+      "plan_category": "therapy_couples",
+      "price": 29.99,
+      "currency": "EUR",
+      "billing_period": "monthly",
+      "billing_cycle": "monthly",
+      "actual_charge": 29.99,
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
+      "setup_note": "ΔΕΝ ΕΙΝΑΙ ΑΚΟΜΑ ΕΝΕΡΓΟ — απαιτείται πραγματική τιμή Stripe (επαναλαμβανόμενη, 29,99 €).",
+      "plan_type": "subscription",
+      "session_duration": 45,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "1 συνεδρία τον μήνα",
+        "Συνεδρίες 45 λεπτών",
+        "Θεραπεία ζευγαριών"
+      ],
+      "quotas": {
+        "live_sessions_per_month": 1,
+        "session_duration_minutes": 45
+      },
+      "display_price": "29,99 €/μήνα",
+      "display_billing": "1 συνεδρία τον μήνα",
+      "popular": false
+    },
+    {
+      "id": "coaching_weekly",
+      "name": "Coaching — 1x την εβδομάδα",
+      "plan_category": "coaching",
+      "price": 49.99,
+      "currency": "EUR",
+      "billing_period": "weekly",
+      "billing_cycle": "monthly",
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
+      "setup_note": "ΔΕΝ ΕΙΝΑΙ ΑΚΟΜΑ ΕΝΕΡΓΟ — απαιτείται πραγματική τιμή Stripe (επαναλαμβανόμενη, 49,99 €).",
+      "plan_type": "subscription",
+      "session_duration": 30,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "Συνεδρίες coaching 30 λεπτών",
+        "1 συνεδρία την εβδομάδα",
+        "Offline chat",
+        "Παρακολούθηση στόχων"
+      ],
+      "quotas": {
+        "live_sessions_per_month": 4,
+        "session_duration_minutes": 30,
+        "message_word_limit": 500
+      },
+      "display_price": "49,99 €/εβδομάδα",
+      "display_billing": "Χρέωση μηνιαίως στα 199,96 € · Συνεδρίες 30 λεπτών",
+      "popular": false,
+      "actual_charge": 199.96
+    },
+    {
+      "id": "coaching_bimonthly",
+      "name": "Coaching — 2x τον μήνα",
+      "plan_category": "coaching",
+      "price": 24.99,
+      "currency": "EUR",
+      "billing_period": "monthly",
+      "billing_cycle": "monthly",
+      "actual_charge": 24.99,
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
+      "setup_note": "ΔΕΝ ΕΙΝΑΙ ΑΚΟΜΑ ΕΝΕΡΓΟ — απαιτείται πραγματική τιμή Stripe (επαναλαμβανόμενη, 24,99 €).",
+      "plan_type": "subscription",
+      "session_duration": 30,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "Συνεδρίες coaching 30 λεπτών",
+        "2 συνεδρίες τον μήνα",
+        "Offline chat",
+        "Παρακολούθηση στόχων"
+      ],
+      "quotas": {
+        "live_sessions_per_month": 2,
+        "session_duration_minutes": 30,
+        "message_word_limit": 500
+      },
+      "display_price": "24,99 €/μήνα",
+      "display_billing": "Συνεδρίες 30 λεπτών · 2x τον μήνα",
+      "popular": false
+    },
+    {
+      "id": "coaching_monthly",
+      "name": "Coaching — 1x τον μήνα",
+      "plan_category": "coaching",
+      "price": 14.99,
+      "currency": "EUR",
+      "billing_period": "monthly",
+      "billing_cycle": "monthly",
+      "actual_charge": 14.99,
+      "stripe_price_id": "REPLACE_WITH_NEW_STRIPE_PRICE_ID",
+      "stripe_product_id": "REPLACE_WITH_NEW_STRIPE_PRODUCT_ID",
+      "setup_note": "ΔΕΝ ΕΙΝΑΙ ΑΚΟΜΑ ΕΝΕΡΓΟ — απαιτείται πραγματική τιμή Stripe (επαναλαμβανόμενη, 14,99 €).",
+      "plan_type": "subscription",
+      "session_duration": 30,
+      "requires_frequency_selection": false,
+      "requires_session_type_selection": false,
+      "features": [
+        "Συνεδρίες coaching 30 λεπτών",
+        "1 συνεδρία τον μήνα",
+        "Offline chat",
+        "Παρακολούθηση στόχων"
+      ],
+      "quotas": {
+        "live_sessions_per_month": 1,
+        "session_duration_minutes": 30,
+        "message_word_limit": 500
+      },
+      "display_price": "14,99 €/μήνα",
+      "display_billing": "Συνεδρίες 30 λεπτών · 1x τον μήνα",
+      "popular": false
     }
   ],
   "session_payment_methods_en": [
@@ -804,11 +1455,7 @@
       "id": "stripe_checkout",
       "name": "Secure Checkout",
       "enabled": true,
-      "supported_cards": [
-        "visa",
-        "mastercard",
-        "amex"
-      ],
+      "supported_cards": ["visa", "mastercard", "amex"],
       "require_3ds": true,
       "logo_url": "",
       "display_name": "Card / SEPA"
@@ -834,11 +1481,7 @@
       "id": "stripe_checkout",
       "name": "Sichere Bezahlung",
       "enabled": true,
-      "supported_cards": [
-        "visa",
-        "mastercard",
-        "amex"
-      ],
+      "supported_cards": ["visa", "mastercard", "amex"],
       "require_3ds": true,
       "logo_url": "",
       "display_name": "Kreditkarte / SEPA"
@@ -864,11 +1507,7 @@
       "id": "stripe_checkout",
       "name": "Sigurno plaćanje",
       "enabled": true,
-      "supported_cards": [
-        "visa",
-        "mastercard",
-        "amex"
-      ],
+      "supported_cards": ["visa", "mastercard", "amex"],
       "require_3ds": true,
       "logo_url": "",
       "display_name": "Kreditna kartica / SEPA"
@@ -894,11 +1533,7 @@
       "id": "stripe_checkout",
       "name": "Secure Checkout",
       "enabled": true,
-      "supported_cards": [
-        "visa",
-        "mastercard",
-        "amex"
-      ],
+      "supported_cards": ["visa", "mastercard", "amex"],
       "require_3ds": true,
       "logo_url": "",
       "display_name": "Card / SEPA"
