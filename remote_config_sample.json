@@ -448,9 +448,7 @@
       "plan_type": "subscription",
       "requires_frequency_selection": false,
       "requires_session_type_selection": false,
-      "features": [
-        "Chat, Journaling und Stimmungstracker"
-      ],
+      "features": ["Chat, Journaling, Stimmungstracker"],
       "quotas": {
         "offline_messages_per_day": 5,
         "message_word_limit": 2500,
