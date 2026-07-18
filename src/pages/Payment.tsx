@@ -132,17 +132,7 @@ const buildDisplayGroups = (
       groups.push({ card: plansInCat[0] });
     }
   });
-
-  // Sorting logic to put Single Session at the end
-  return groups.sort((a, b) => {
-    const nameA = (a.card.name || "").toLowerCase();
-    const nameB = (b.card.name || "").toLowerCase();
-    const isSingleA = nameA.includes("single");
-    const isSingleB = nameB.includes("single");
-    if (isSingleA && !isSingleB) return 1;
-    if (!isSingleA && isSingleB) return -1;
-    return 0;
-  });
+  return groups;
 };
 
 const filterAddonsForPlan = (
@@ -434,9 +424,6 @@ const PlanCard = ({
   const titleColor = expanded ? "text-white" : "text-[#92C7CF]";
   const subtextColor = expanded ? "text-white/90" : "text-black";
 
-  // Naam se "Therapy" nikalne ke liye logic
-  const cleanedName = plan.name.replace(/therapy/gi, "").trim();
-
   const availableFreqs: SessionFrequency[] =
     (plan as any).available_frequencies || [];
   const freqOptions = getFrequencies(t).filter((f) =>
@@ -475,7 +462,7 @@ const PlanCard = ({
         <div className="p-6 flex items-center justify-between">
           <div>
             <div className="flex items-center gap-2">
-              <p className={`text-[20px] font-bold ${titleColor}`}>{cleanedName}</p>
+              <p className={`text-[20px] font-bold ${titleColor}`}>{plan.name}</p>
               {plan.popular && (
                 <Badge className="bg-white/20 text-white text-xs border-none font-medium">
                   {t("payment.plan.popular")}
@@ -484,12 +471,14 @@ const PlanCard = ({
             </div>
             
             <div className="mt-1">
+              {/* Only show 'Choose frequency' if it has multiple options and is closed */}
               {isFrequencyCard && !expanded && (
                 <p className={`text-[14px] font-medium ${subtextColor}`}>
                   {t("payment.plan.choose_your_frequency", "Choose your frequency")}
                 </p>
               )}
               
+              {/* Show price ONLY when expanded (Open karne par) */}
               {expanded && (
                 <p className="text-[18px] font-medium text-white">
                   {frequencyPlanMap && plusConfig?.frequency 
