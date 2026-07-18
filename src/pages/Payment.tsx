@@ -132,7 +132,17 @@ const buildDisplayGroups = (
       groups.push({ card: plansInCat[0] });
     }
   });
-  return groups;
+
+  // Sorting logic to put Single Session at the end
+  return groups.sort((a, b) => {
+    const nameA = (a.card.name || "").toLowerCase();
+    const nameB = (b.card.name || "").toLowerCase();
+    const isSingleA = nameA.includes("single");
+    const isSingleB = nameB.includes("single");
+    if (isSingleA && !isSingleB) return 1;
+    if (!isSingleA && isSingleB) return -1;
+    return 0;
+  });
 };
 
 const filterAddonsForPlan = (
@@ -420,18 +430,21 @@ const PlanCard = ({
 }) => {
   const { t } = useTranslation();
   
-  // DYNAMIC STYLING BASED ON EXPANDED STATE
   const bgColor = expanded ? "bg-[#92C7CF]" : "bg-[#F7F9FA]";
   const titleColor = expanded ? "text-white" : "text-[#92C7CF]";
   const subtextColor = expanded ? "text-white/90" : "text-black";
+
+  // Naam se "Therapy" nikalne ke liye logic
+  const cleanedName = plan.name.replace(/therapy/gi, "").trim();
 
   const availableFreqs: SessionFrequency[] =
     (plan as any).available_frequencies || [];
   const freqOptions = getFrequencies(t).filter((f) =>
     availableFreqs.includes(f.value),
   );
+  
   const isFrequencyCard =
-    plan.requires_frequency_selection && freqOptions.length > 0;
+    plan.requires_frequency_selection && freqOptions.length > 1;
 
   const displayFeatures =
     isFrequencyCard &&
@@ -462,7 +475,7 @@ const PlanCard = ({
         <div className="p-6 flex items-center justify-between">
           <div>
             <div className="flex items-center gap-2">
-              <p className={`text-[20px] font-bold ${titleColor}`}>{plan.name}</p>
+              <p className={`text-[20px] font-bold ${titleColor}`}>{cleanedName}</p>
               {plan.popular && (
                 <Badge className="bg-white/20 text-white text-xs border-none font-medium">
                   {t("payment.plan.popular")}
@@ -470,25 +483,21 @@ const PlanCard = ({
               )}
             </div>
             
-            {isFrequencyCard && !expanded ? (
-              <p className={`text-[14px] mt-1 font-medium ${subtextColor}`}>
-                {t("payment.plan.choose_your_frequency", "Choose your frequency")}
-              </p>
-            ) : (
-              <div className="mt-1">
-                {expanded ? (
-                   <p className="text-[22px] font-bold text-white">
-                    {frequencyPlanMap && plusConfig?.frequency 
-                      ? frequencyPlanMap[plusConfig.frequency]?.display_price 
-                      : plan.display_price}
-                  </p>
-                ) : (
-                  <p className="text-[14px] font-medium text-black">
-                     {t("payment.plan.choose_your_frequency", "Choose your frequency")}
-                  </p>
-                )}
-              </div>
-            )}
+            <div className="mt-1">
+              {isFrequencyCard && !expanded && (
+                <p className={`text-[14px] font-medium ${subtextColor}`}>
+                  {t("payment.plan.choose_your_frequency", "Choose your frequency")}
+                </p>
+              )}
+              
+              {expanded && (
+                <p className="text-[18px] font-medium text-white">
+                  {frequencyPlanMap && plusConfig?.frequency 
+                    ? frequencyPlanMap[plusConfig.frequency]?.display_price 
+                    : plan.display_price}
+                </p>
+              )}
+            </div>
           </div>
           <ChevronDown
             className={`w-5 h-5 transition-transform duration-300 ${
@@ -560,7 +569,6 @@ const PlanCard = ({
   );
 };
 
-// ... Rest of the components stay the same ...
 const PlusConfigStep = ({
   selectedPlan,
   plusConfig,
