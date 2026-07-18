@@ -21,6 +21,7 @@ import {
   User,
   Clock,
   Home,
+  Globe,
 } from "lucide-react";
 import { toast } from "@/hooks/use-toast";
 import type {
@@ -164,7 +165,6 @@ const Payment = () => {
     proceedToSummary,
     initiatePayment,
     goBack,
-    clearCheckoutUrl,
     clearError,
     mockPayment,
     isLocalhost,
@@ -337,25 +337,18 @@ const SubscriptionSelector = ({
     }
   };
 
-  const groupedPlans: Record<string, TherapySessionPlan[]> = {};
-  plans.forEach((plan: TherapySessionPlan) => {
-    const cat = plan.plan_category || "basic";
-    if (!groupedPlans[cat]) groupedPlans[cat] = [];
-    groupedPlans[cat].push(plan);
-  });
-
   const canContinue = !!selectedPlan;
 
   return (
-    <div className="relative min-h-screen bg-[#FFFFFF]">
-      <div className="flex items-center justify-end px-4 py-3 bg-white sticky top-0 z-10">
+    <div className="relative min-h-screen bg-white">
+      <div className="flex items-center justify-start gap-3 px-6 py-4 bg-white sticky top-0 z-20">
         <Button
           variant="ghost"
-          size="sm"
+          size="icon"
           onClick={handleLogout}
-          className="text-gray-400 hover:text-red-500 h-9 rounded-full px-4"
+          className="text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-full w-10 h-10 transition-all"
         >
-          <LogOut className="w-5 h-5" />
+          <LogOut className="w-6 h-6" />
         </Button>
       </div>
 
@@ -363,7 +356,7 @@ const SubscriptionSelector = ({
         <h1 className="text-[28px] font-bold text-center mb-1 text-black">
           {t("payment.subscription.title", "Choose Your Plan")}
         </h1>
-        <p className="text-center text-gray-400 text-[15px] mb-8">
+        <p className="text-center text-gray-400 text-[15px] mb-10">
           {t("payment.subscription.subtitle", "Select the plan that works for you")}
         </p>
 
@@ -390,12 +383,12 @@ const SubscriptionSelector = ({
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 p-6 bg-white/80 backdrop-blur-md">
+      <div className="fixed bottom-0 left-0 right-0 p-6 bg-white/80 backdrop-blur-md border-t border-gray-50 z-20">
         <div className="max-w-2xl mx-auto">
           <Button
             onClick={onContinue}
             disabled={!canContinue}
-            className="w-full h-[58px] rounded-full bg-[#92C7CF] hover:bg-[#7FB0B8] text-white text-lg font-medium shadow-md transition-all active:scale-[0.98] disabled:bg-gray-300"
+            className="w-full h-[58px] rounded-full bg-[#92C7CF] hover:bg-[#7FB0B8] text-white text-lg font-bold shadow-md transition-all active:scale-[0.98] disabled:bg-gray-300"
           >
             {t("payment.subscription.continue", "Continue to Payment")}
           </Button>
@@ -427,7 +420,7 @@ const PlanCard = ({
 }) => {
   const { t } = useTranslation();
   
-  // MATCHING STYLING FROM IMAGE
+  // DYNAMIC STYLING BASED ON EXPANDED STATE
   const bgColor = expanded ? "bg-[#92C7CF]" : "bg-[#F7F9FA]";
   const titleColor = expanded ? "text-white" : "text-[#92C7CF]";
   const subtextColor = expanded ? "text-white/90" : "text-black";
@@ -461,7 +454,7 @@ const PlanCard = ({
   return (
     <div className="transition-all duration-300">
       <Card
-        className={`${bgColor} border-none shadow-sm cursor-pointer transition-all ${
+        className={`${bgColor} border-none shadow-sm cursor-pointer transition-all duration-300 ${
           expanded ? "rounded-t-[24px] rounded-b-none" : "rounded-[24px]"
         }`}
         onClick={onClick}
@@ -567,6 +560,7 @@ const PlanCard = ({
   );
 };
 
+// ... Rest of the components stay the same ...
 const PlusConfigStep = ({
   selectedPlan,
   plusConfig,
@@ -676,9 +670,6 @@ const PlusConfigStep = ({
     </div>
   );
 };
-
-// ... Rest of the components (AddonsPicker, PaymentMethodSelector, InvoiceSummary, SuccessScreen) stay same as they were 
-// unless further specific layout changes are needed there as well.
 
 const AddonsPicker = ({
   availableAddons,
