@@ -317,9 +317,6 @@ const SubscriptionSelector = ({
   onExpand,
   onPlanSelected,
   onContinue,
-  availableAddons,
-  selectedAddons,
-  onToggleAddon,
   plusConfig,
   onConfigChange,
   onSelectFrequencyPlan,
@@ -347,113 +344,60 @@ const SubscriptionSelector = ({
     groupedPlans[cat].push(plan);
   });
 
-  const categoryLabels: Record<string, string> = {
-    basic: t("payment.categories.basic"),
-    plus: t("payment.categories.plus"),
-    coaching: t("payment.categories.coaching"),
-    therapy_couples: t("payment.categories.therapy_couples"),
-  };
   const canContinue = !!selectedPlan;
 
   return (
-    <div className="relative min-h-screen">
-      <div className="flex items-center px-4 py-3 bg-white/50 backdrop-blur-sm sticky top-0 z-10">
+    <div className="relative min-h-screen bg-[#FFFFFF]">
+      <div className="flex items-center justify-end px-4 py-3 bg-white sticky top-0 z-10">
         <Button
           variant="ghost"
           size="sm"
           onClick={handleLogout}
-          className="text-gray-500 hover:text-red-500 h-9 rounded-full px-4 hover:bg-red-50"
+          className="text-gray-400 hover:text-red-500 h-9 rounded-full px-4"
         >
-          <LogOut className="w-4 h-4 mr-2" />
-          {t("common.logout")}
+          <LogOut className="w-5 h-5" />
         </Button>
       </div>
 
-      <div className="max-w-2xl mx-auto px-4 pb-32">
-        <h1 className="text-3xl font-bold text-center mb-2">
-          {t("payment.subscription.title")}
+      <div className="max-w-2xl mx-auto px-6 pb-40">
+        <h1 className="text-[28px] font-bold text-center mb-1 text-black">
+          {t("payment.subscription.title", "Choose Your Plan")}
         </h1>
-        <p className="text-center text-gray-600 mb-8">
-          {t("payment.subscription.subtitle")}
+        <p className="text-center text-gray-400 text-[15px] mb-8">
+          {t("payment.subscription.subtitle", "Select the plan that works for you")}
         </p>
 
-        <div className="mb-8 p-4 bg-orange-50 rounded-xl border border-orange-200 flex items-start gap-3">
-          <AlertCircle className="w-5 h-5 text-orange-500 flex-shrink-0 mt-0.5" />
-          <p className="text-sm text-orange-800">
-            {t(
-              "payment.subscription.already_paid_disclaimer",
-              "If you have already paid, please contact us at info@thepsy.de",
-            )}
-          </p>
+        <div className="space-y-4">
+          {plans.length > 0 && buildDisplayGroups(plans, t).map(({ card, frequencyPlanMap }) => (
+            <PlanCard
+              key={card.id}
+              plan={card}
+              expanded={expandedPlanId === card.id}
+              onClick={() => {
+                onExpand(card.id);
+                if (!frequencyPlanMap)
+                  onPlanSelected({
+                    ...card,
+                    requires_frequency_selection: true,
+                  });
+              }}
+              plusConfig={plusConfig}
+              onConfigChange={onConfigChange}
+              frequencyPlanMap={frequencyPlanMap}
+              onSelectFrequencyPlan={onSelectFrequencyPlan}
+            />
+          ))}
         </div>
-
-        {Object.keys(groupedPlans).length > 0 ? (
-          Object.entries(groupedPlans).map(([category, categoryPlans]) => {
-            const displayGroups = buildDisplayGroups(categoryPlans, t);
-            return (
-              <div key={category} className="mb-6">
-                <div className="flex items-center gap-2 mb-3">
-                  <span className="text-xs font-semibold uppercase tracking-wider text-gray-400 bg-gray-100 px-3 py-1 rounded-full">
-                    {categoryLabels[category] || category}
-                  </span>
-                </div>
-                <div className="space-y-3">
-                  {displayGroups.map(({ card, frequencyPlanMap }) => (
-                    <PlanCard
-                      key={card.id}
-                      plan={card}
-                      expanded={expandedPlanId === card.id}
-                      onClick={() => {
-                        onExpand(card.id);
-                        if (!frequencyPlanMap)
-                          onPlanSelected({
-                            ...card,
-                            requires_frequency_selection: true,
-                          });
-                      }}
-                      plusConfig={plusConfig}
-                      onConfigChange={onConfigChange}
-                      frequencyPlanMap={frequencyPlanMap}
-                      onSelectFrequencyPlan={onSelectFrequencyPlan}
-                    />
-                  ))}
-                </div>
-              </div>
-            );
-          })
-        ) : (
-          <div className="space-y-4">
-            {buildDisplayGroups(plans, t).map(({ card, frequencyPlanMap }) => (
-              <PlanCard
-                key={card.id}
-                plan={card}
-                expanded={expandedPlanId === card.id}
-                onClick={() => {
-                  onExpand(card.id);
-                  if (!frequencyPlanMap)
-                    onPlanSelected({
-                      ...card,
-                      requires_frequency_selection: true,
-                    });
-                }}
-                plusConfig={plusConfig}
-                onConfigChange={onConfigChange}
-                frequencyPlanMap={frequencyPlanMap}
-                onSelectFrequencyPlan={onSelectFrequencyPlan}
-              />
-            ))}
-          </div>
-        )}
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t">
+      <div className="fixed bottom-0 left-0 right-0 p-6 bg-white/80 backdrop-blur-md">
         <div className="max-w-2xl mx-auto">
           <Button
             onClick={onContinue}
             disabled={!canContinue}
-            className="w-full h-14 rounded-full bg-[#92C7CF] hover:bg-[#7FB0B8] text-white text-lg disabled:bg-gray-300"
+            className="w-full h-[58px] rounded-full bg-[#92C7CF] hover:bg-[#7FB0B8] text-white text-lg font-medium shadow-md transition-all active:scale-[0.98] disabled:bg-gray-300"
           >
-            {t("payment.subscription.continue")}
+            {t("payment.subscription.continue", "Continue to Payment")}
           </Button>
         </div>
       </div>
@@ -466,7 +410,6 @@ const PlanCard = ({
   expanded,
   onClick,
   plusConfig,
-  onConfigChange,
   frequencyPlanMap,
   onSelectFrequencyPlan,
 }: {
@@ -483,9 +426,11 @@ const PlanCard = ({
   ) => void;
 }) => {
   const { t } = useTranslation();
-  const bgColor = expanded ? "bg-[#92C7CF]" : "bg-[#F7F7F7]";
-  const textColor = expanded ? "text-white" : "text-black";
-  const nameColor = expanded ? "text-white" : "text-[#92C7CF]";
+  
+  // MATCHING STYLING FROM IMAGE
+  const bgColor = expanded ? "bg-[#92C7CF]" : "bg-[#F7F9FA]";
+  const titleColor = expanded ? "text-white" : "text-[#92C7CF]";
+  const subtextColor = expanded ? "text-white/90" : "text-black";
 
   const availableFreqs: SessionFrequency[] =
     (plan as any).available_frequencies || [];
@@ -495,14 +440,6 @@ const PlanCard = ({
   const isFrequencyCard =
     plan.requires_frequency_selection && freqOptions.length > 0;
 
-  // The group/virtual card's `features` field is frozen to whichever plan was
-  // picked as "primary" when the group was built (usually the weekly plan) -
-  // see buildDisplayGroups(). That means the checklist below would otherwise
-  // always show the weekly plan's features even when the user picks a
-  // different frequency (2x/month, 1x/month, etc). To keep the checklist in
-  // sync with the selected frequency, resolve the features from the actual
-  // per-frequency plan whenever one has been picked, and only fall back to
-  // the group card's own features before any frequency has been chosen yet.
   const displayFeatures =
     isFrequencyCard &&
     plusConfig?.frequency &&
@@ -510,11 +447,6 @@ const PlanCard = ({
       ? frequencyPlanMap[plusConfig.frequency]!.features
       : plan.features;
 
-  // Selecting a frequency must keep this card expanded (it stays the same
-  // group card, e.g. "group_plus") and must not wipe out the frequency we
-  // just picked - both of those used to happen because this used to call
-  // the generic selectPlan(), which resets expandedPlanId to the *real*
-  // plan's id (different from the group card's id) and resets plusConfig.
   const handleFrequencyPick = (freqValue: SessionFrequency) => {
     const realPlan = frequencyPlanMap?.[freqValue];
     if (realPlan && onSelectFrequencyPlan) {
@@ -527,63 +459,63 @@ const PlanCard = ({
   };
 
   return (
-    <div>
+    <div className="transition-all duration-300">
       <Card
-        className={`${bgColor} ${textColor} cursor-pointer transition-all ${expanded ? "shadow-lg" : "shadow"} ${expanded ? "rounded-t-3xl rounded-b-none" : "rounded-3xl"}`}
+        className={`${bgColor} border-none shadow-sm cursor-pointer transition-all ${
+          expanded ? "rounded-t-[24px] rounded-b-none" : "rounded-[24px]"
+        }`}
         onClick={onClick}
       >
         <div className="p-6 flex items-center justify-between">
           <div>
             <div className="flex items-center gap-2">
-              <p className={`text-sm font-medium ${nameColor}`}>{plan.name}</p>
+              <p className={`text-[20px] font-bold ${titleColor}`}>{plan.name}</p>
               {plan.popular && (
-                <Badge className="bg-white/20 text-white text-xs">
+                <Badge className="bg-white/20 text-white text-xs border-none font-medium">
                   {t("payment.plan.popular")}
                 </Badge>
               )}
-              {plan.session_duration && (
-                <Badge className="bg-white/20 text-white text-xs flex items-center gap-1">
-                  <Clock className="w-3 h-3" />
-                  {plan.session_duration} {t("payment.plan.min_suffix")}
-                </Badge>
-              )}
             </div>
-            {isFrequencyCard ? (
-              <p
-                className={`text-sm mt-0.5 ${expanded ? "text-white/90" : "text-black"}`}
-              >
-                {t("payment.plan.choose_your_frequency")}
+            
+            {isFrequencyCard && !expanded ? (
+              <p className={`text-[14px] mt-1 font-medium ${subtextColor}`}>
+                {t("payment.plan.choose_your_frequency", "Choose your frequency")}
               </p>
             ) : (
-              <>
-                <p className="text-2xl font-extrabold">{plan.display_price}</p>
-                {plan.display_billing && (
-                  <p
-                    className={`text-xs mt-0.5 ${expanded ? "text-white/70" : "text-gray-500"}`}
-                  >
-                    {plan.display_billing}
+              <div className="mt-1">
+                {expanded ? (
+                   <p className="text-[22px] font-bold text-white">
+                    {frequencyPlanMap && plusConfig?.frequency 
+                      ? frequencyPlanMap[plusConfig.frequency]?.display_price 
+                      : plan.display_price}
+                  </p>
+                ) : (
+                  <p className="text-[14px] font-medium text-black">
+                     {t("payment.plan.choose_your_frequency", "Choose your frequency")}
                   </p>
                 )}
-              </>
+              </div>
             )}
           </div>
           <ChevronDown
-            className={`w-6 h-6 transition-transform ${expanded ? "rotate-180" : ""}`}
+            className={`w-5 h-5 transition-transform duration-300 ${
+              expanded ? "rotate-180 text-white" : "text-black"
+            }`}
           />
         </div>
       </Card>
 
       {expanded && (
-        <div className="bg-white border border-[#92C7CF] rounded-b-3xl p-6 space-y-3">
+        <div className="bg-white border-2 border-[#92C7CF] border-t-0 rounded-b-[24px] p-6 space-y-4 shadow-md">
           {isFrequencyCard && (
             <div
-              className="pb-3 mb-1 border-b border-gray-100"
+              className="pb-4 mb-2 border-b border-gray-100"
               onClick={(e) => e.stopPropagation()}
             >
-              <p className="text-sm font-semibold text-gray-500 mb-3">
-                {t("payment.plan.choose_frequency")}
+              <p className="text-[13px] font-bold text-gray-400 uppercase tracking-wide mb-4">
+                {t("payment.plan.choose_frequency", "Choose frequency")}
               </p>
-              <div className="space-y-3">
+              <div className="space-y-4">
                 {freqOptions.map((freq) => {
                   const freqPrice = (plan as any).frequency_prices?.[
                     freq.value
@@ -593,182 +525,44 @@ const PlanCard = ({
                     <div
                       key={freq.value}
                       onClick={() => handleFrequencyPick(freq.value)}
-                      className="flex items-center justify-between cursor-pointer"
+                      className="flex items-center justify-between cursor-pointer group"
                     >
                       <div className="flex items-center gap-3">
                         <div
-                          className={`w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${isSelected ? "border-[#92C7CF]" : "border-gray-300"}`}
+                          className={`w-5 h-5 rounded-full border-2 flex items-center justify-center transition-colors ${
+                            isSelected ? "border-[#92C7CF]" : "border-gray-200"
+                          }`}
                         >
                           {isSelected && (
                             <div className="w-2.5 h-2.5 rounded-full bg-[#92C7CF]" />
                           )}
                         </div>
-                        <span className="text-gray-800">{freq.label}</span>
+                        <span className={`text-[15px] font-medium ${isSelected ? "text-black" : "text-gray-500"}`}>
+                          {freq.label}
+                        </span>
                       </div>
                       {typeof freqPrice === "number" && (
-                        <span className="text-[#92C7CF] font-semibold">
-                          €{freqPrice.toFixed(2)}/{t("payment.plan.per_week")}
+                        <span className="text-[#92C7CF] font-bold text-[15px]">
+                          €{freqPrice.toFixed(2)}/{t("payment.plan.per_week", "week")}
                         </span>
                       )}
                     </div>
                   );
                 })}
               </div>
-              {plusConfig?.frequency &&
-                frequencyPlanMap?.[plusConfig.frequency] && (
-                  <div className="mt-4 p-3 rounded-xl bg-[#eef7f8] flex items-center justify-between">
-                    <span className="text-sm text-gray-600">
-                      {
-                        getFrequencies(t).find(
-                          (f) => f.value === plusConfig.frequency,
-                        )?.label
-                      }
-                    </span>
-                    <div className="text-right">
-                      <p className="text-sm font-semibold text-[#92C7CF]">
-                        {frequencyPlanMap[plusConfig.frequency]?.display_price}
-                      </p>
-                      {frequencyPlanMap[plusConfig.frequency]
-                        ?.display_billing && (
-                        <p className="text-xs text-gray-500">
-                          {
-                            frequencyPlanMap[plusConfig.frequency]
-                              ?.display_billing
-                          }
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                )}
             </div>
           )}
 
-          {displayFeatures.map((feature, index) => (
-            <div key={index} className="flex items-start gap-2">
-              <Check className="w-5 h-5 text-[#92C7CF] flex-shrink-0 mt-0.5" />
-              <span className="text-gray-700">{feature}</span>
-            </div>
-          ))}
+          <div className="space-y-3 pt-2">
+            {displayFeatures.map((feature, index) => (
+              <div key={index} className="flex items-start gap-3">
+                <Check className="w-5 h-5 text-[#92C7CF] flex-shrink-0" />
+                <span className="text-[15px] text-gray-600 leading-tight">{feature}</span>
+              </div>
+            ))}
+          </div>
         </div>
       )}
-    </div>
-  );
-};
-
-const AddonsPicker = ({
-  availableAddons,
-  selectedAddons,
-  onToggleAddon,
-  plusConfig,
-  onConfigChange,
-}: {
-  availableAddons: AddonConfig[];
-  selectedAddons: string[];
-  onToggleAddon: (id: string) => void;
-  plusConfig: any;
-  onConfigChange: (c: any) => void;
-}) => {
-  const { t } = useTranslation();
-  const roomsAddon = availableAddons.find(isRoomsAddon);
-  const roomsSelected = !!roomsAddon && selectedAddons.includes(roomsAddon.id);
-  const selectedRoomCategories: string[] = plusConfig?.room_categories || [];
-
-  const toggleRoomCategory = (cat: string) => {
-    const updated = selectedRoomCategories.includes(cat)
-      ? selectedRoomCategories.filter((c: string) => c !== cat)
-      : [...selectedRoomCategories, cat];
-    onConfigChange({ ...plusConfig, room_categories: updated });
-  };
-
-  if (availableAddons.length === 0) return null;
-
-  return (
-    <div>
-      <h2 className="text-lg font-semibold mb-1">
-        {t("payment.addons.title")}
-      </h2>
-      <p className="text-sm text-gray-500 mb-4">
-        {t("payment.addons.subtitle")}
-      </p>
-      <div className="space-y-3">
-        {availableAddons.map((addon: AddonConfig) => {
-          const isRooms = isRoomsAddon(addon);
-          const isSelected = selectedAddons.includes(addon.id);
-          return (
-            <div key={addon.id}>
-              <Card
-                onClick={() => onToggleAddon(addon.id)}
-                className={`p-4 cursor-pointer transition-all ${
-                  isSelected
-                    ? `border-2 border-[#92C7CF] bg-[#eef7f8] ${isRooms ? "rounded-b-none" : ""}`
-                    : "border hover:border-[#92C7CF]/50"
-                }`}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    {isRooms && (
-                      <Home className="w-4 h-4 text-[#92C7CF] flex-shrink-0" />
-                    )}
-                    <div>
-                      <p className="font-medium">{addon.name}</p>
-                      {addon.description && (
-                        <p className="text-sm text-gray-500">
-                          {addon.description}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="font-bold text-[#92C7CF]">
-                      {addon.display_price}
-                    </span>
-                    {isSelected && (
-                      <div className="w-6 h-6 rounded-full bg-[#92C7CF] flex items-center justify-center">
-                        <Check className="w-4 h-4 text-white" />
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </Card>
-              {isRooms && isSelected && (
-                <div className="border border-t-0 border-[#92C7CF] rounded-b-xl p-4 bg-white space-y-3">
-                  <p className="text-sm text-gray-500">
-                    {t("payment.addons.choose_rooms")}
-                  </p>
-                  <div className="flex flex-wrap gap-2">
-                    {ROOM_CATEGORIES.map((cat) => {
-                      const active = selectedRoomCategories.includes(cat);
-                      return (
-                        <button
-                          key={cat}
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            toggleRoomCategory(cat);
-                          }}
-                          className={`px-3 py-1.5 rounded-full text-sm border transition-all ${
-                            active
-                              ? "bg-[#92C7CF] text-white border-[#92C7CF]"
-                              : "bg-white text-gray-600 border-gray-200 hover:border-[#92C7CF]/50"
-                          }`}
-                        >
-                          {cat}
-                        </button>
-                      );
-                    })}
-                  </div>
-                  {selectedRoomCategories.length === 0 && (
-                    <p className="text-xs text-red-500 flex items-center gap-1">
-                      <AlertCircle className="w-3 h-3" />
-                      {t("payment.addons.select_room_warning")}
-                    </p>
-                  )}
-                </div>
-              )}
-            </div>
-          );
-        })}
-      </div>
     </div>
   );
 };
@@ -810,15 +604,15 @@ const PlusConfigStep = ({
     (!showSessionType || plusConfig?.session_type) && roomsValid;
 
   return (
-    <div className="min-h-screen px-4 py-6">
+    <div className="min-h-screen px-6 py-8">
       <div className="max-w-2xl mx-auto">
-        <div className="flex items-center gap-4 mb-6">
-          <Button variant="ghost" size="icon" onClick={onBack}>
+        <div className="flex items-center gap-4 mb-8">
+          <Button variant="ghost" size="icon" onClick={onBack} className="rounded-full h-10 w-10">
             <ArrowLeft className="w-6 h-6" />
           </Button>
           <div>
             <h1 className="text-2xl font-bold">{t("payment.config.title")}</h1>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-gray-500 font-medium">
               {selectedPlan?.name}
               {selectedFrequencyLabel ? ` · ${selectedFrequencyLabel}` : ""}
             </p>
@@ -827,10 +621,10 @@ const PlusConfigStep = ({
 
         {showSessionType && (
           <div className="mb-8">
-            <h2 className="text-lg font-semibold mb-4">
+            <h2 className="text-lg font-bold mb-4">
               {t("payment.config.session_type")}
             </h2>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-2 gap-4">
               {typeOptions.map((sType) => {
                 const Icon = sType.icon;
                 return (
@@ -842,16 +636,16 @@ const PlusConfigStep = ({
                         session_type: sType.value,
                       })
                     }
-                    className={`p-4 cursor-pointer transition-all text-center ${
+                    className={`p-5 cursor-pointer transition-all text-center rounded-[24px] border-2 ${
                       plusConfig?.session_type === sType.value
-                        ? "border-2 border-[#92C7CF] bg-[#eef7f8]"
-                        : "border hover:border-[#92C7CF]/50"
+                        ? "border-[#92C7CF] bg-[#f0f9fa]"
+                        : "border-gray-100 hover:border-[#92C7CF]/50"
                     }`}
                   >
                     <Icon
-                      className={`w-8 h-8 mx-auto mb-2 ${plusConfig?.session_type === sType.value ? "text-[#92C7CF]" : "text-gray-400"}`}
+                      className={`w-8 h-8 mx-auto mb-3 ${plusConfig?.session_type === sType.value ? "text-[#92C7CF]" : "text-gray-400"}`}
                     />
-                    <p className="font-medium">{sType.label}</p>
+                    <p className="font-bold text-[15px]">{sType.label}</p>
                   </Card>
                 );
               })}
@@ -860,7 +654,7 @@ const PlusConfigStep = ({
         )}
 
         {availableAddons.length > 0 && (
-          <div className="mb-8">
+          <div className="mb-10">
             <AddonsPicker
               availableAddons={availableAddons}
               selectedAddons={selectedAddons}
@@ -874,7 +668,7 @@ const PlusConfigStep = ({
         <Button
           onClick={onContinue}
           disabled={!canContinue}
-          className="w-full h-14 rounded-full bg-[#92C7CF] hover:bg-[#7FB0B8] text-white text-lg disabled:bg-gray-300"
+          className="w-full h-14 rounded-full bg-[#92C7CF] hover:bg-[#7FB0B8] text-white text-lg font-bold disabled:bg-gray-300"
         >
           {t("payment.config.continue")}
         </Button>
@@ -883,8 +677,128 @@ const PlusConfigStep = ({
   );
 };
 
+// ... Rest of the components (AddonsPicker, PaymentMethodSelector, InvoiceSummary, SuccessScreen) stay same as they were 
+// unless further specific layout changes are needed there as well.
+
+const AddonsPicker = ({
+  availableAddons,
+  selectedAddons,
+  onToggleAddon,
+  plusConfig,
+  onConfigChange,
+}: {
+  availableAddons: AddonConfig[];
+  selectedAddons: string[];
+  onToggleAddon: (id: string) => void;
+  plusConfig: any;
+  onConfigChange: (c: any) => void;
+}) => {
+  const { t } = useTranslation();
+  const roomsAddon = availableAddons.find(isRoomsAddon);
+  const roomsSelected = !!roomsAddon && selectedAddons.includes(roomsAddon.id);
+  const selectedRoomCategories: string[] = plusConfig?.room_categories || [];
+
+  const toggleRoomCategory = (cat: string) => {
+    const updated = selectedRoomCategories.includes(cat)
+      ? selectedRoomCategories.filter((c: string) => c !== cat)
+      : [...selectedRoomCategories, cat];
+    onConfigChange({ ...plusConfig, room_categories: updated });
+  };
+
+  if (availableAddons.length === 0) return null;
+
+  return (
+    <div>
+      <h2 className="text-lg font-bold mb-1">
+        {t("payment.addons.title")}
+      </h2>
+      <p className="text-[14px] text-gray-500 mb-5 font-medium">
+        {t("payment.addons.subtitle")}
+      </p>
+      <div className="space-y-4">
+        {availableAddons.map((addon: AddonConfig) => {
+          const isRooms = isRoomsAddon(addon);
+          const isSelected = selectedAddons.includes(addon.id);
+          return (
+            <div key={addon.id}>
+              <Card
+                onClick={() => onToggleAddon(addon.id)}
+                className={`p-5 cursor-pointer transition-all rounded-[24px] ${
+                  isSelected
+                    ? `border-2 border-[#92C7CF] bg-[#f0f9fa] ${isRooms ? "rounded-b-none" : ""}`
+                    : "border-gray-100 border-2 hover:border-[#92C7CF]/50"
+                }`}
+              >
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    {isRooms && (
+                      <Home className="w-5 h-5 text-[#92C7CF] flex-shrink-0" />
+                    )}
+                    <div>
+                      <p className="font-bold text-[16px]">{addon.name}</p>
+                      {addon.description && (
+                        <p className="text-[13px] text-gray-500 font-medium">
+                          {addon.description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                    <span className="font-bold text-[#92C7CF] text-[16px]">
+                      {addon.display_price}
+                    </span>
+                    {isSelected && (
+                      <div className="w-6 h-6 rounded-full bg-[#92C7CF] flex items-center justify-center">
+                        <Check className="w-4 h-4 text-white" />
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </Card>
+              {isRooms && isSelected && (
+                <div className="border-2 border-t-0 border-[#92C7CF] rounded-b-[24px] p-5 bg-white space-y-4">
+                  <p className="text-[13px] font-bold text-gray-400 uppercase">
+                    {t("payment.addons.choose_rooms")}
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {ROOM_CATEGORIES.map((cat) => {
+                      const active = selectedRoomCategories.includes(cat);
+                      return (
+                        <button
+                          key={cat}
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleRoomCategory(cat);
+                          }}
+                          className={`px-4 py-2 rounded-full text-[13px] font-bold border-2 transition-all ${
+                            active
+                              ? "bg-[#92C7CF] text-white border-[#92C7CF]"
+                              : "bg-white text-gray-500 border-gray-100 hover:border-[#92C7CF]/50"
+                          }`}
+                        >
+                          {cat}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {selectedRoomCategories.length === 0 && (
+                    <p className="text-[12px] text-red-500 font-bold flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" />
+                      {t("payment.addons.select_room_warning")}
+                    </p>
+                  )}
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
 const PaymentMethodSelector = ({
-  selectedPlan,
   paymentMethods,
   selectedMethod,
   onMethodSelected,
@@ -893,16 +807,16 @@ const PaymentMethodSelector = ({
 }: any) => {
   const { t } = useTranslation();
   return (
-    <div className="min-h-screen px-4 py-6">
+    <div className="min-h-screen px-6 py-8">
       <div className="max-w-2xl mx-auto">
-        <div className="flex items-center gap-4 mb-6">
-          <Button variant="ghost" size="icon" onClick={onBack}>
+        <div className="flex items-center gap-4 mb-8">
+          <Button variant="ghost" size="icon" onClick={onBack} className="rounded-full">
             <ArrowLeft className="w-6 h-6" />
           </Button>
           <h1 className="text-2xl font-bold">{t("payment.method.title")}</h1>
         </div>
 
-        <p className="text-gray-600 text-center mb-8">
+        <p className="text-gray-500 font-medium text-center mb-10">
           {t("payment.method.subtitle")}
         </p>
 
@@ -917,14 +831,14 @@ const PaymentMethodSelector = ({
             {paymentMethods.map((method: any) => (
               <Card
                 key={method.id}
-                className={`p-4 cursor-pointer ${selectedMethod?.id === method.id ? "border-2 border-[#92C7CF]" : "border"}`}
+                className={`p-5 cursor-pointer rounded-[24px] border-2 transition-all ${selectedMethod?.id === method.id ? "border-[#92C7CF] bg-[#f0f9fa]" : "border-gray-100"}`}
                 onClick={() => onMethodSelected(method)}
               >
                 <div className="flex items-center gap-4">
                   <RadioGroupItem value={method.id} id={method.id} />
                   <Label
                     htmlFor={method.id}
-                    className="text-lg font-medium cursor-pointer flex-1"
+                    className="text-[17px] font-bold cursor-pointer flex-1"
                   >
                     {method.display_name}
                   </Label>
@@ -937,7 +851,7 @@ const PaymentMethodSelector = ({
         <Button
           onClick={onContinue}
           disabled={!selectedMethod}
-          className="w-full h-14 rounded-full bg-[#92C7CF] hover:bg-[#7FB0B8] text-white text-lg mt-8 disabled:bg-gray-300"
+          className="w-full h-14 rounded-full bg-[#92C7CF] hover:bg-[#7FB0B8] text-white text-lg font-bold mt-10 disabled:bg-gray-300"
         >
           {t("payment.method.continue")}
         </Button>
@@ -995,33 +909,33 @@ const InvoiceSummary = ({
   );
 
   return (
-    <div className="min-h-screen px-4 py-6">
+    <div className="min-h-screen px-6 py-8">
       <div className="max-w-2xl mx-auto pb-40">
-        <div className="flex items-center gap-4 mb-6">
-          <Button variant="ghost" size="icon" onClick={onBack}>
+        <div className="flex items-center gap-4 mb-8">
+          <Button variant="ghost" size="icon" onClick={onBack} className="rounded-full">
             <ArrowLeft className="w-6 h-6" />
           </Button>
           <h1 className="text-2xl font-bold">{t("payment.summary.title")}</h1>
         </div>
 
-        <div className="space-y-4">
-          <Card className="p-6 bg-[#F7F7F7]">
-            <p className="text-sm text-gray-500 mb-2">
+        <div className="space-y-6">
+          <Card className="p-6 bg-[#F7F9FA] border-none rounded-[24px]">
+            <p className="text-[13px] font-bold text-gray-400 uppercase mb-3">
               {t("payment.summary.overview_label")}
             </p>
-            <p className="text-xl font-bold">{selectedPlan.name}</p>
-            <p className="text-2xl font-extrabold text-[#92C7CF]">
+            <p className="text-[20px] font-bold">{selectedPlan.name}</p>
+            <p className="text-[24px] font-bold text-[#92C7CF] mt-1">
               €{originalPrice.toFixed(2)}
               {selectedPlan.plan_type !== "one_time"
                 ? ` / ${t("payment.plan.per_week")}`
                 : ""}
             </p>
             {plusConfig && (
-              <div className="mt-3 flex flex-wrap gap-2">
+              <div className="mt-4 flex flex-wrap gap-2">
                 {plusConfig.frequency && (
                   <Badge
                     variant="outline"
-                    className="text-[#92C7CF] border-[#92C7CF]"
+                    className="text-[#92C7CF] border-[#92C7CF] font-bold bg-white"
                   >
                     {frequencyLabel[plusConfig.frequency]}
                   </Badge>
@@ -1029,7 +943,7 @@ const InvoiceSummary = ({
                 {plusConfig.session_type && (
                   <Badge
                     variant="outline"
-                    className="text-[#92C7CF] border-[#92C7CF] capitalize"
+                    className="text-[#92C7CF] border-[#92C7CF] capitalize font-bold bg-white"
                   >
                     {plusConfig.session_type}{" "}
                     {t("payment.frequency_label.session_suffix")}
@@ -1038,29 +952,30 @@ const InvoiceSummary = ({
               </div>
             )}
           </Card>
+          
           {selectedAddonDetails.length > 0 && (
-            <Card className="p-6 bg-[#F7F7F7]">
-              <p className="text-sm text-gray-500 mb-3">
+            <Card className="p-6 bg-[#F7F9FA] border-none rounded-[24px]">
+              <p className="text-[13px] font-bold text-gray-400 uppercase mb-4">
                 {t("payment.addons.selected_title")}
               </p>
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {selectedAddonDetails.map((addon: AddonConfig) => (
                   <div key={addon.id}>
                     <div className="flex justify-between items-center">
-                      <span className="text-sm text-gray-700">
+                      <span className="text-[15px] font-bold text-gray-700">
                         {addon.name}
                       </span>
-                      <span className="text-sm font-medium">
+                      <span className="text-[15px] font-bold text-[#92C7CF]">
                         {addon.display_price}
                       </span>
                     </div>
                     {isRoomsAddon(addon) &&
                       selectedRoomCategories.length > 0 && (
-                        <div className="flex flex-wrap gap-1 mt-1">
+                        <div className="flex flex-wrap gap-1 mt-2">
                           {selectedRoomCategories.map((cat) => (
                             <span
                               key={cat}
-                              className="text-xs px-2 py-0.5 bg-white border border-gray-200 rounded-full text-gray-500"
+                              className="text-[11px] font-bold px-2.5 py-1 bg-white border border-gray-100 rounded-full text-gray-400"
                             >
                               {cat}
                             </span>
@@ -1072,28 +987,30 @@ const InvoiceSummary = ({
               </div>
             </Card>
           )}
-          <Card className="p-6 bg-[#F7F7F7]">
-            <p className="text-sm text-gray-500 mb-2">
+
+          <Card className="p-6 bg-[#F7F9FA] border-none rounded-[24px]">
+            <p className="text-[13px] font-bold text-gray-400 uppercase mb-3">
               {t("payment.summary.method_label")}
             </p>
-            <p className="text-lg font-medium">{paymentMethodName}</p>
+            <p className="text-[17px] font-bold">{paymentMethodName}</p>
           </Card>
-          <Card className="p-6 border border-gray-200">
-            <div className="flex items-center gap-2 mb-3">
+
+          <Card className="p-6 border-2 border-gray-100 rounded-[24px]">
+            <div className="flex items-center gap-2 mb-4">
               <Tag className="w-4 h-4 text-[#92C7CF]" />
-              <p className="font-medium text-gray-700">
+              <p className="font-bold text-[15px] text-gray-700">
                 {t("payment.coupon.have_code")}
               </p>
             </div>
 
             {couponResult?.valid ? (
-              <div className="flex items-center gap-3 p-3 bg-green-50 border border-green-200 rounded-xl">
+              <div className="flex items-center gap-4 p-4 bg-green-50 border-2 border-green-100 rounded-[20px]">
                 <Check className="w-5 h-5 text-green-500 flex-shrink-0" />
                 <div className="flex-1">
-                  <p className="font-semibold text-green-700">
+                  <p className="font-bold text-green-700">
                     {couponCode.toUpperCase()}
                   </p>
-                  <p className="text-sm text-green-600">
+                  <p className="text-[13px] text-green-600 font-medium">
                     -
                     {couponResult.coupon?.discount_type === "percentage"
                       ? `${couponResult.coupon.discount_value}%`
@@ -1105,27 +1022,27 @@ const InvoiceSummary = ({
                   variant="ghost"
                   size="sm"
                   onClick={onRemoveCoupon}
-                  className="text-gray-400 hover:text-red-500 p-1"
+                  className="text-gray-400 hover:text-red-500 h-8 w-8 p-0"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-5 h-5" />
                 </Button>
               </div>
             ) : (
               <div className="space-y-2">
-                <div className="flex gap-2">
+                <div className="flex gap-3">
                   <Input
                     placeholder={t("payment.coupon.placeholder")}
                     value={couponCode}
                     onChange={(e) =>
                       onCouponCodeChange(e.target.value.toUpperCase())
                     }
-                    className="uppercase"
+                    className="uppercase rounded-[16px] h-12 font-bold border-gray-100"
                     onKeyDown={(e) => e.key === "Enter" && onApplyCoupon()}
                   />
                   <Button
                     onClick={onApplyCoupon}
                     disabled={!couponCode.trim() || isCouponLoading}
-                    className="bg-[#92C7CF] hover:bg-[#7FB0B8] text-white px-6 rounded-xl"
+                    className="bg-[#92C7CF] hover:bg-[#7FB0B8] text-white px-6 rounded-[16px] h-12 font-bold"
                   >
                     {isCouponLoading ? (
                       <Loader2 className="w-4 h-4 animate-spin" />
@@ -1135,7 +1052,7 @@ const InvoiceSummary = ({
                   </Button>
                 </div>
                 {couponResult?.error && (
-                  <p className="text-sm text-red-500 flex items-center gap-1">
+                  <p className="text-[13px] text-red-500 font-bold flex items-center gap-1 px-1">
                     <AlertCircle className="w-4 h-4" />
                     {couponResult.error}
                   </p>
@@ -1143,47 +1060,48 @@ const InvoiceSummary = ({
               </div>
             )}
           </Card>
-          <Card className="p-6 border border-gray-300">
-            <div className="space-y-3">
+
+          <Card className="p-6 border-2 border-gray-100 rounded-[24px]">
+            <div className="space-y-4">
               <div className="flex justify-between">
-                <span className="text-gray-600">
+                <span className="text-gray-500 font-bold text-[15px]">
                   {t("payment.summary.subtotal")}
                 </span>
-                <span className="font-medium">€{originalPrice.toFixed(2)}</span>
+                <span className="font-bold text-[15px]">€{originalPrice.toFixed(2)}</span>
               </div>
 
               {addonsTotal > 0 && (
                 <div className="flex justify-between">
-                  <span className="text-gray-600">
+                  <span className="text-gray-500 font-bold text-[15px]">
                     {t("payment.summary.addons_label")}
                   </span>
-                  <span className="font-medium">€{addonsTotal.toFixed(2)}</span>
+                  <span className="font-bold text-[15px]">€{addonsTotal.toFixed(2)}</span>
                 </div>
               )}
 
               {hasDiscount && (
                 <div className="flex justify-between text-green-600">
-                  <span>
+                  <span className="font-bold text-[15px]">
                     {t("payment.summary.discount_label")} (
                     {couponCode.toUpperCase()})
                   </span>
-                  <span className="font-medium">
+                  <span className="font-bold text-[15px]">
                     -€{couponResult.discount_amount?.toFixed(2)}
                   </span>
                 </div>
               )}
 
-              <div className="border-t pt-3 flex justify-between">
-                <span className="text-lg font-bold">
+              <div className="border-t pt-4 flex justify-between items-center">
+                <span className="text-[18px] font-bold">
                   {t("payment.summary.total")}
                 </span>
-                <span className="text-lg font-bold text-[#92C7CF]">
+                <span className="text-[22px] font-bold text-[#92C7CF]">
                   €{finalPrice.toFixed(2)}
                 </span>
               </div>
 
               {selectedPlan.plan_type !== "one_time" && (
-                <p className="text-xs text-gray-400 text-center">
+                <p className="text-[12px] text-gray-400 text-center font-medium pt-2">
                   {t("payment.summary.billed_note")}
                 </p>
               )}
@@ -1192,16 +1110,16 @@ const InvoiceSummary = ({
         </div>
       </div>
 
-      <div className="fixed bottom-0 left-0 right-0 p-4 bg-white border-t">
-        <div className="max-w-2xl mx-auto space-y-3">
+      <div className="fixed bottom-0 left-0 right-0 p-6 bg-white/90 backdrop-blur-md border-t border-gray-50">
+        <div className="max-w-2xl mx-auto space-y-4">
           <Button
             onClick={onConfirm}
             disabled={isLoading}
-            className="w-full h-14 rounded-full bg-[#92C7CF] hover:bg-[#7FB0B8] text-white text-lg disabled:bg-gray-400"
+            className="w-full h-14 rounded-full bg-[#92C7CF] hover:bg-[#7FB0B8] text-white text-lg font-bold shadow-md transition-all active:scale-[0.98] disabled:bg-gray-400"
           >
             {isLoading ? (
-              <div className="flex items-center gap-2">
-                <div className="animate-spin h-5 w-5 border-2 border-white rounded-full border-t-transparent"></div>
+              <div className="flex items-center gap-3">
+                <Loader2 className="h-5 w-5 animate-spin" />
                 {t("payment.summary.processing")}
               </div>
             ) : (
@@ -1214,7 +1132,7 @@ const InvoiceSummary = ({
               onClick={mockPayment}
               disabled={isLoading}
               variant="outline"
-              className="w-full h-12 rounded-full border-2 border-orange-500 text-orange-500 hover:bg-orange-50 disabled:opacity-50"
+              className="w-full h-12 rounded-full border-2 border-orange-500 text-orange-500 hover:bg-orange-50 font-bold disabled:opacity-50"
             >
               🎭 {t("payment.mock_dev")}
             </Button>
@@ -1228,18 +1146,20 @@ const InvoiceSummary = ({
 const SuccessScreen = ({ onContinue }: { onContinue: () => void }) => {
   const { t } = useTranslation();
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
-      <div className="max-w-md text-center">
-        <div className="w-24 h-24 bg-[#F7F7F7] rounded-full flex items-center justify-center mx-auto mb-6">
-          <Check className="w-12 h-12 text-[#92C7CF]" />
+    <div className="min-h-screen flex items-center justify-center p-8 bg-white">
+      <div className="max-w-md w-full text-center">
+        <div className="w-28 h-28 bg-[#F7F9FA] rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">
+          <Check className="w-14 h-14 text-[#92C7CF]" />
         </div>
-        <h1 className="text-3xl font-bold mb-4">
+        <h1 className="text-[32px] font-bold mb-4 text-black leading-tight">
           {t("payment.success.title")}
         </h1>
-        <p className="text-gray-600 mb-8">{t("payment.success.message")}</p>
+        <p className="text-gray-500 mb-10 text-[16px] font-medium px-4">
+          {t("payment.success.message")}
+        </p>
         <Button
           onClick={onContinue}
-          className="w-full h-14 rounded-full bg-[#92C7CF] hover:bg-[#7FB0B8] text-white text-lg"
+          className="w-full h-14 rounded-full bg-[#92C7CF] hover:bg-[#7FB0B8] text-white text-lg font-bold shadow-lg transition-all active:scale-[0.98]"
         >
           {t("payment.subscription.continue")}
         </Button>
