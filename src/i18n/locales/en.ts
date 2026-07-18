@@ -826,7 +826,7 @@ export const en = {
                 "choose_frequency": "Choose frequency",
                 "per_week": "week",
                 "per_month": "month",
-                "freq_weekly_label": "1x per week",
+                "freq_weekly_label": "4x per month",
                 "freq_weekly_sub": "Most recommended",
                 "freq_bimonthly_label": "2x per month",
                 "freq_bimonthly_sub": "Good balance",

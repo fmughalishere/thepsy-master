@@ -805,7 +805,7 @@ export const de = {
                 "choose_frequency": "Häufigkeit wählen",
                 "per_week": "Woche",
                 "per_month": "Monat",
-                "freq_weekly_label": "1x pro Woche",
+                "freq_weekly_label": "4x pro Monat",
                 "freq_weekly_sub": "Am meisten empfohlen",
                 "freq_bimonthly_label": "2x pro Monat",
                 "freq_bimonthly_sub": "Guter Kompromiss",
