@@ -369,10 +369,7 @@ const SubscriptionSelector = ({
               onClick={() => {
                 onExpand(card.id);
                 if (!frequencyPlanMap)
-                  onPlanSelected({
-                    ...card,
-                    requires_frequency_selection: true,
-                  });
+                  onPlanSelected(card); // FIXED: Removed forced frequency flag
               }}
               plusConfig={plusConfig}
               onConfigChange={onConfigChange}

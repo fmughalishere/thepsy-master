@@ -234,7 +234,14 @@ export const usePayment = () => {
             setState(prev => ({ ...prev, error: 'Please select a plan' }));
             return;
         }
-        if (state.selectedPlan.requires_frequency_selection || state.selectedPlan.requires_session_type_selection) {
+        
+        const needsFrequency = state.selectedPlan.requires_frequency_selection;
+        const needsSessionType = state.selectedPlan.requires_session_type_selection;
+        
+        // If plan has addons available, it should still go to config step to let user pick them
+        const hasAddons = state.availableAddons.length > 0;
+
+        if (needsFrequency || needsSessionType || hasAddons) {
             setState(prev => ({ ...prev, currentStep: PaymentStep.PlusConfig, error: null }));
         } else {
             setState(prev => ({ ...prev, currentStep: PaymentStep.PaymentMethod, error: null }));
@@ -242,10 +249,21 @@ export const usePayment = () => {
     };
 
     const proceedFromPlusConfig = () => {
-        if (!state.plusConfig) {
-            setState(prev => ({ ...prev, error: 'Please select frequency and session type' }));
+        const plan = state.selectedPlan;
+        const needsFrequency = plan?.requires_frequency_selection;
+        const needsSessionType = plan?.requires_session_type_selection;
+
+        // FIXED: Only validate if the plan actually requires these fields
+        if (needsFrequency && !state.plusConfig?.frequency) {
+            setState(prev => ({ ...prev, error: 'Please select frequency' }));
             return;
         }
+
+        if (needsSessionType && !state.plusConfig?.session_type) {
+            setState(prev => ({ ...prev, error: 'Please select session type' }));
+            return;
+        }
+
         setState(prev => ({ ...prev, currentStep: PaymentStep.PaymentMethod, error: null }));
     };
 
