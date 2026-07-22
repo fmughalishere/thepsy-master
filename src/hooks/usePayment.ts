@@ -498,15 +498,20 @@ export const usePayment = () => {
 
             if (method.id === 'paypal_checkout') {
                 // PayPal checkout is currently DISABLED server-side
-                // (see functions/src/index.ts — createPayPalCheckout export is
+                // (see functions/index.js — createPayPalCheckout export is
                 // commented out until PAYPAL_CLIENT_ID / PAYPAL_CLIENT_SECRET
                 // secrets are created). Re-enable this block once that
-                // function is deployed as an httpsCallable, and call it the
-                // same way createCheckoutSession is called below.
+                // function is deployed, and call it the same way
+                // createCheckoutSession is called below (fetch + Bearer token).
                 throw new Error('PayPal checkout is temporarily unavailable. Please use another payment method.');
             }
 
-            // ---- Stripe checkout (Firebase callable function) ----
+            // ---- Stripe checkout ----
+            // NOTE: createCheckoutSession is an onRequest (plain HTTPS) Cloud
+            // Function, NOT an onCall callable — it parses the Firebase Auth
+            // token itself from the Authorization header and expects a plain
+            // JSON body (not the httpsCallable wrapper format). It must be
+            // called with fetch(), not httpsCallable().
             const frequency = state.plusConfig?.frequency;
             const priceId = (frequency && plan.frequency_stripe_price_ids?.[frequency])
                 || plan.stripe_price_id;
@@ -515,36 +520,38 @@ export const usePayment = () => {
                 throw new Error('Plan configuration error: Missing Stripe Price ID for this plan/frequency.');
             }
 
-            const createCheckoutSessionFn = httpsCallable<
-                {
-                    planId: string;
-                    priceId: string;
-                    planName: string;
-                    mode: string;
-                    amount: number;
-                    successUrl: string;
-                    cancelUrl: string;
-                    couponCode?: string;
-                    plusConfig: PlusConfigSelection | null;
-                    selectedAddons: string[];
-                },
-                { url?: string }
-            >(functions, 'createCheckoutSession');
+            const token = await auth.currentUser.getIdToken(true);
+            const projectId = auth.app?.options?.projectId || import.meta.env.VITE_FIREBASE_PROJECT_ID || 'thepsy-f950e';
+            const isTest = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
-            const result = await createCheckoutSessionFn({
-                planId: plan.id,
-                priceId,
-                planName: plan.name,
-                mode: plan.plan_type || 'subscription',
-                amount: finalPrice,
-                successUrl: `${window.location.origin}/payment-success`,
-                cancelUrl: `${window.location.origin}/payment`,
-                couponCode,
-                plusConfig: state.plusConfig,
-                selectedAddons: state.selectedAddons,
+            const stripeFetchUrl = `https://europe-west1-${projectId}.cloudfunctions.net/createCheckoutSession`;
+
+            const response = await fetch(stripeFetchUrl, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    planId: plan.id,
+                    priceId,
+                    planName: plan.name,
+                    mode: plan.plan_type || 'subscription',
+                    successUrl: `${window.location.origin}/payment-success`,
+                    cancelUrl: `${window.location.origin}/payment`,
+                    isTest,
+                    couponCode,
+                    plusConfig: state.plusConfig,
+                    selectedAddons: state.selectedAddons,
+                }),
             });
 
-            const data = result.data;
+            if (!response.ok) {
+                const errText = await response.text();
+                throw new Error(`Checkout session failed: ${errText}`);
+            }
+
+            const data: { url?: string; sessionId?: string } = await response.json();
             if (!data?.url) throw new Error('No checkout URL was returned. Please try again.');
 
             setState(prev => ({ ...prev, checkoutUrl: data.url as string, isLoading: true }));
