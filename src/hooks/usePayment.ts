@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { fetchAndActivate, getValue } from 'firebase/remote-config';
 import { remoteConfig, functions, auth, db } from '@/lib/firebase';
 import { doc, onSnapshot, Timestamp, addDoc, collection, updateDoc, getDoc, query, where, getDocs } from 'firebase/firestore';
+import { httpsCallable, FunctionsError } from 'firebase/functions';
 import {
     mergePlanWithPriceOverride, mergeAddonWithPriceOverride,
     PRICING_PLANS_DOC, PRICING_ADDONS_DOC,
@@ -13,7 +14,6 @@ import type {
     CouponValidationResult, Coupon, AddonConfig
 } from '@/types/payment';
 import { useTranslation } from 'react-i18next';
-import { getLocalhostFirebaseTarget, isDevelLocalhost } from '@/lib/firebase-local-target';
 
 export enum PaymentStep {
     Subscription = 'subscription',
@@ -55,6 +55,25 @@ interface SubscriptionListenerOptions {
     plansSnapshot?: TherapySessionPlan[];
 }
 
+function getCallableErrorMessage(error: any, fallback: string): string {
+    if (error instanceof FunctionsError || error?.code?.startsWith?.('functions/')) {
+        const code: string = error.code || '';
+        const message: string = error.message || '';
+        if (code.endsWith('internal') || code.endsWith('unknown') || message.toLowerCase() === 'internal') {
+            return `${fallback} (please try again, or contact support if this persists)`;
+        }
+        return message || fallback;
+    }
+    return error?.message || fallback;
+}
+
+function getAddonNumericPrice(addon: AddonConfig | undefined): number | null {
+    if (!addon) return null;
+    if (typeof addon.price === 'number' && !Number.isNaN(addon.price)) return addon.price;
+    const parsed = parseFloat(addon.price as any);
+    return Number.isNaN(parsed) ? null : parsed;
+}
+
 export const usePayment = () => {
     const [state, setState] = useState<PaymentState>({
         currentStep: PaymentStep.Subscription,
@@ -93,7 +112,7 @@ export const usePayment = () => {
                 if (isLocalhost) console.log(...args);
             };
 
-            const useDebugPaymentsRc = isDevelLocalhost();
+            const useDebugPaymentsRc = isLocalhost;
             const configKey = useDebugPaymentsRc ? 'debug_payments' : 'payments';
 
             debugLog(`🔍 Fetching Remote Config: '${configKey}'`);
@@ -104,7 +123,7 @@ export const usePayment = () => {
             const packagesString = packagesValue.asString();
             let packagesConfig = {};
             if (packagesString) {
-                try { packagesConfig = JSON.parse(packagesString); } catch (e) { }
+                try { packagesConfig = JSON.parse(packagesString); } catch (e) { /* ignore malformed packages json */ }
             }
 
             let configValue = getValue(remoteConfig, configKey);
@@ -116,7 +135,7 @@ export const usePayment = () => {
             }
 
             if (!configString) {
-                throw new Error(`Payment configuration not found in Remote Config`);
+                throw new Error('Payment configuration not found in Remote Config');
             }
 
             const config: TherapySessionConfig = JSON.parse(configString);
@@ -158,7 +177,9 @@ export const usePayment = () => {
 
     useEffect(() => {
         fetchPaymentConfig();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [i18n.language]);
+
     useEffect(() => {
         const unsubPlans = onSnapshot(PRICING_PLANS_DOC, (snap) => {
             const overrides = (snap.data() as any) || {};
@@ -234,10 +255,10 @@ export const usePayment = () => {
             setState(prev => ({ ...prev, error: 'Please select a plan' }));
             return;
         }
-        
+
         const needsFrequency = state.selectedPlan.requires_frequency_selection;
         const needsSessionType = state.selectedPlan.requires_session_type_selection;
-        
+
         // If plan has addons available, it should still go to config step to let user pick them
         const hasAddons = state.availableAddons.length > 0;
 
@@ -253,7 +274,6 @@ export const usePayment = () => {
         const needsFrequency = plan?.requires_frequency_selection;
         const needsSessionType = plan?.requires_session_type_selection;
 
-        // FIXED: Only validate if the plan actually requires these fields
         if (needsFrequency && !state.plusConfig?.frequency) {
             setState(prev => ({ ...prev, error: 'Please select frequency' }));
             return;
@@ -418,9 +438,8 @@ export const usePayment = () => {
     const getAddonsTotal = (): number => {
         return state.selectedAddons.reduce((sum, addonId) => {
             const addon = state.availableAddons.find(a => a.id === addonId);
-            if (!addon) return sum;
-            const price = typeof addon.price === 'number' ? addon.price : parseFloat(addon.price as any) || 0;
-            return sum + price;
+            const price = getAddonNumericPrice(addon);
+            return sum + (price ?? 0);
         }, 0);
     };
 
@@ -432,6 +451,16 @@ export const usePayment = () => {
         }
         return subtotal;
     };
+    const validateSelectedAddonsHavePrices = (): string | null => {
+        for (const addonId of state.selectedAddons) {
+            const addon = state.availableAddons.find(a => a.id === addonId);
+            const price = getAddonNumericPrice(addon);
+            if (price === null) {
+                return `"${addon?.name || addonId}" doesn't have a finalized price yet. Please remove it or choose another add-on.`;
+            }
+        }
+        return null;
+    };
 
     const initiatePayment = async () => {
         const plan = state.selectedPlan;
@@ -439,6 +468,12 @@ export const usePayment = () => {
 
         if (!plan || !method) {
             setState(prev => ({ ...prev, error: 'Please select a plan and payment method' }));
+            return;
+        }
+
+        const addonError = validateSelectedAddonsHavePrices();
+        if (addonError) {
+            setState(prev => ({ ...prev, error: addonError }));
             return;
         }
 
@@ -452,10 +487,6 @@ export const usePayment = () => {
 
             if (!auth.currentUser) throw new Error('User not logged in');
 
-            const token = await auth.currentUser.getIdToken(true);
-            const projectId = auth.app?.options?.projectId || import.meta.env.VITE_FIREBASE_PROJECT_ID || 'thepsy-f950e';
-            const isTesting = projectId === 'testing-d74ed';
-
             const listenerOptions: SubscriptionListenerOptions = {
                 paymentLabel: method.display_name || method.name,
                 paymentId: method.id,
@@ -466,92 +497,67 @@ export const usePayment = () => {
             const couponCode = state.couponResult?.valid ? state.couponCode : undefined;
 
             if (method.id === 'paypal_checkout') {
-                if (plan.plan_type === 'one_time' || plan.id === 'one_time_session') {
-                    throw new Error('PayPal is only available for subscription plans.');
-                }
-                const freq = state.plusConfig?.frequency;
-                const freqPaypalPlanId = freq
-                    ? (method.frequency_plan_ids?.[plan.id]?.[freq] || state.config?.paypal_config?.frequency_plan_ids?.[plan.id]?.[freq])
-                    : undefined;
-                const paypalPlanId = freqPaypalPlanId || method.plan_ids?.[plan.id] || state.config?.paypal_config?.plan_ids?.[plan.id];
-                if (!paypalPlanId) throw new Error('PayPal plan ID is not configured for this plan.');
-
-                const paypalFetchUrl = isTesting
-                    ? "https://createpaypalcheckout-tebfrt2jva-ew.a.run.app"
-                    : `https://europe-west1-${projectId}.cloudfunctions.net/createPayPalCheckout`;
-
-                const response = await fetch(paypalFetchUrl, {
-                    method: 'POST',
-                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-                    body: JSON.stringify({
-                        planId: plan.id, planName: plan.name,
-                        planType: plan.plan_type || 'subscription',
-                        amount: finalPrice, currency: plan.currency || 'EUR',
-                        paypalPlanId,
-                        successUrl: `${window.location.origin}/payment-success`,
-                        cancelUrl: `${window.location.origin}/payment`,
-                        isSandbox: state.config?.paypal_config?.environment === 'sandbox',
-                        couponCode, plusConfig: state.plusConfig,
-                    })
-                });
-
-                if (!response.ok) {
-                    const errorText = await response.text();
-                    throw new Error(`HTTP ${response.status}: ${errorText}`);
-                }
-                const data = await response.json();
-                if (!data.url) throw new Error('No PayPal approval URL returned');
-
-                setState(prev => ({ ...prev, checkoutUrl: data.url, isLoading: true }));
-                startListeningForSubscription(listenerOptions);
-                window.location.href = data.url;
-                return;
+                // PayPal checkout is currently DISABLED server-side
+                // (see functions/src/index.ts — createPayPalCheckout export is
+                // commented out until PAYPAL_CLIENT_ID / PAYPAL_CLIENT_SECRET
+                // secrets are created). Re-enable this block once that
+                // function is deployed as an httpsCallable, and call it the
+                // same way createCheckoutSession is called below.
+                throw new Error('PayPal checkout is temporarily unavailable. Please use another payment method.');
             }
 
+            // ---- Stripe checkout (Firebase callable function) ----
             const frequency = state.plusConfig?.frequency;
             const priceId = (frequency && plan.frequency_stripe_price_ids?.[frequency])
                 || plan.stripe_price_id;
-            if (!priceId) throw new Error('Plan configuration error: Missing Stripe Price ID');
 
-            const stripeFetchUrl = isTesting
-                ? "https://createcheckoutsession-tebfrt2jva-ew.a.run.app"
-                : `https://europe-west1-${projectId}.cloudfunctions.net/createCheckoutSession`;
-
-            const response = await fetch(stripeFetchUrl, {
-                method: 'POST',
-                headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    planId: plan.id, priceId,
-                    planName: plan.name,
-                    mode: plan.plan_type || 'subscription',
-                    amount: finalPrice,
-                    successUrl: `${window.location.origin}/payment-success`,
-                    cancelUrl: `${window.location.origin}/payment`,
-                    isTest: (window.location.hostname === 'localhost') || state.config?.stripe_config?.publishable_key?.startsWith('pk_test') || false,
-                    couponCode,
-                    plusConfig: state.plusConfig,
-                    selectedAddons: state.selectedAddons,
-                })
-            });
-
-            if (!response.ok) {
-                const errorText = await response.text();
-                throw new Error(`HTTP ${response.status}: ${errorText}`);
+            if (!priceId) {
+                throw new Error('Plan configuration error: Missing Stripe Price ID for this plan/frequency.');
             }
 
-            const data = await response.json();
-            if (!data.url) throw new Error('No URL in response');
+            const createCheckoutSessionFn = httpsCallable<
+                {
+                    planId: string;
+                    priceId: string;
+                    planName: string;
+                    mode: string;
+                    amount: number;
+                    successUrl: string;
+                    cancelUrl: string;
+                    couponCode?: string;
+                    plusConfig: PlusConfigSelection | null;
+                    selectedAddons: string[];
+                },
+                { url?: string }
+            >(functions, 'createCheckoutSession');
 
-            setState(prev => ({ ...prev, checkoutUrl: data.url, isLoading: true }));
+            const result = await createCheckoutSessionFn({
+                planId: plan.id,
+                priceId,
+                planName: plan.name,
+                mode: plan.plan_type || 'subscription',
+                amount: finalPrice,
+                successUrl: `${window.location.origin}/payment-success`,
+                cancelUrl: `${window.location.origin}/payment`,
+                couponCode,
+                plusConfig: state.plusConfig,
+                selectedAddons: state.selectedAddons,
+            });
+
+            const data = result.data;
+            if (!data?.url) throw new Error('No checkout URL was returned. Please try again.');
+
+            setState(prev => ({ ...prev, checkoutUrl: data.url as string, isLoading: true }));
             window.location.href = data.url;
             startListeningForSubscription(listenerOptions);
 
         } catch (error: any) {
             console.error('Payment processing failed:', error);
+            const message = getCallableErrorMessage(error, 'Payment processing failed');
             setState(prev => ({
                 ...prev,
                 isLoading: false,
-                error: error.message || 'Payment processing failed',
+                error: message,
                 currentStep: PaymentStep.Summary
             }));
         }
@@ -597,7 +603,6 @@ export const usePayment = () => {
                         }
                     }
 
-                    // Record transaction with coupon info
                     const transactionData: any = {
                         userId: auth.currentUser?.uid,
                         userName: auth.currentUser?.displayName || "Unknown User",
@@ -637,8 +642,6 @@ export const usePayment = () => {
                                     redeemed_at: new Date().toISOString(),
                                 };
                                 await addDoc(collection(db, 'coupon_redemptions'), redemption);
-
-                                // Update coupon total_redemptions
                                 const couponRef = doc(db, 'coupons', state.couponResult.coupon.id!);
                                 const couponSnap = await getDoc(couponRef);
                                 if (couponSnap.exists()) {
