@@ -521,7 +521,7 @@ export const usePayment = () => {
             }
 
             const token = await auth.currentUser.getIdToken(true);
-            const projectId = auth.app?.options?.projectId || import.meta.env.VITE_FIREBASE_PROJECT_ID || 'thepsy-f950e';
+            const projectId = auth.app?.options?.projectId || import.meta.env.VITE_FIREBASE_PROJECT_ID || 'testing-d74ed';
             const isTest = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
 
             const stripeFetchUrl = `https://europe-west1-${projectId}.cloudfunctions.net/createCheckoutSession`;

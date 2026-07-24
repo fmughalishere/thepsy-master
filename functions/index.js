@@ -58,6 +58,11 @@ const { createPayPalCheckout, paypalWebhook } = require('./paypalIntegration');
 exports.createPayPalCheckout = createPayPalCheckout;
 exports.paypalWebhook = paypalWebhook;
 
+const { cancelSubscription } = require('./cancelSubscription');
+exports.cancelSubscription = cancelSubscription;
+
+const { adminSendUserEmailVerification } = require('./adminSendUserEmailVerification');
+exports.adminSendUserEmailVerification = adminSendUserEmailVerification;
 /**
  * Create Stripe PaymentIntent
  */
